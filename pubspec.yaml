@@ -1,0 +1,82 @@
+name: project_phoenix
+description: >
+  Offline-first German learning application for professional readiness.
+  Transforms complete beginners into confident German speakers capable
+  of working in customer service and call centers.
+version: 0.1.0+1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.22.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: ^8.1.6
+  bloc: ^8.1.4
+  equatable: ^2.0.5
+
+  # Dependency Injection
+  get_it: ^7.7.0
+  injectable: ^2.4.4
+
+  # Navigation
+  go_router: ^14.2.7
+
+  # Database
+  sqflite: ^2.3.3+1
+  sqlite3_flutter_libs: ^0.5.24
+  path: ^1.9.0
+  path_provider: ^2.1.4
+
+  # Audio
+  just_audio: ^0.9.40
+  record: ^5.1.2
+
+  # Functional Programming
+  dartz: ^0.10.1
+
+  # UI Enhancement
+  flutter_animate: ^4.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Code Generation
+  build_runner: ^2.4.12
+  injectable_generator: ^2.6.2
+
+  # Testing
+  bloc_test: ^9.1.7
+  mocktail: ^1.0.4
+
+  # Linting
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/audio/missions/mission_zero/
+    - assets/audio/ui/
+    - assets/databases/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-Regular.ttf
+          weight: 400
