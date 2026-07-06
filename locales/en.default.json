@@ -1,0 +1,24 @@
+{
+    "general": {
+        "accessibility": {
+            "skip_to_content": "Skip to content"
+        }
+    },
+    "products": {
+        "product": {
+            "add_to_cart": "Add to Collection",
+            "sold_out": "Sold Out",
+            "view_details": "View Details"
+        }
+    },
+    "collections": {
+        "general": {
+            "no_matches": "No products found"
+        }
+    },
+    "newsletter": {
+        "label": "Email",
+        "success": "Welcome to the circle.",
+        "button_label": "Join"
+    }
+}

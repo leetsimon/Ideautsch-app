@@ -1,0 +1,15 @@
+{
+    "sections": {
+        "main": {
+            "type": "product-main",
+            "blocks": {
+                "materials": { "type": "accordion", "settings": { "title": "Materials & Craftsmanship", "content": "<p>Full-grain vegetable-tanned Italian leather. Cotton twill lining. Brushed gold-tone hardware.</p>" } },
+                "dimensions": { "type": "accordion", "settings": { "title": "Dimensions", "content": "<p>See individual product specifications.</p>" } },
+                "shipping": { "type": "accordion", "settings": { "title": "Shipping & Delivery", "content": "<p>Complimentary express shipping on orders over $150.</p>" } },
+                "returns": { "type": "accordion", "settings": { "title": "Returns & Warranty", "content": "<p>30-day returns. 2-year craftsmanship warranty.</p>" } }
+            },
+            "block_order": ["materials", "dimensions", "shipping", "returns"]
+        }
+    },
+    "order": ["main"]
+}

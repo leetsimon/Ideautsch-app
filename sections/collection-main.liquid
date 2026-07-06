@@ -1,0 +1,46 @@
+<section class="section collection-page">
+    <div class="container">
+        <!-- Collection Header -->
+        <div class="collection-hero reveal">
+            <h1 class="collection-hero-title">{{ collection.title }}</h1>
+            {%- if collection.description != blank -%}
+                <p class="collection-hero-text">{{ collection.description }}</p>
+            {%- endif -%}
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid collection-grid">
+            {%- for product in collection.products -%}
+                <div class="reveal">
+                    {% render 'product-card', product: product %}
+                </div>
+            {%- else -%}
+                <p class="collection-empty">No products found in this collection.</p>
+            {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+            <div class="pagination">
+                {{ paginate | default_pagination }}
+            </div>
+        {%- endif -%}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Collection Page",
+    "tag": "section",
+    "settings": [
+        {
+            "type": "range",
+            "id": "products_per_page",
+            "label": "Products per page",
+            "min": 6,
+            "max": 24,
+            "step": 3,
+            "default": 12
+        }
+    ]
+}
+{% endschema %}

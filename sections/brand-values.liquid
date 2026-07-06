@@ -1,0 +1,66 @@
+<section class="section section-cream values-section">
+    <div class="container">
+        <div class="values-grid">
+            {%- for block in section.blocks -%}
+                <div class="values-item reveal" {{ block.shopify_attributes }}>
+                    <div class="values-icon">
+                        {% render 'icon', icon: block.settings.icon %}
+                    </div>
+                    <h3 class="values-title">{{ block.settings.title }}</h3>
+                    <p class="values-text">{{ block.settings.description }}</p>
+                </div>
+            {%- endfor -%}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Brand Values",
+    "settings": [],
+    "blocks": [
+        {
+            "type": "value",
+            "name": "Value",
+            "settings": [
+                {
+                    "type": "select",
+                    "id": "icon",
+                    "label": "Icon",
+                    "options": [
+                        { "value": "leather", "label": "Leather" },
+                        { "value": "travel", "label": "Travel" },
+                        { "value": "craft", "label": "Craft" },
+                        { "value": "decades", "label": "Decades" }
+                    ],
+                    "default": "leather"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Full-Grain Leather"
+                },
+                {
+                    "type": "text",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "Heritage European tanneries"
+                }
+            ]
+        }
+    ],
+    "max_blocks": 4,
+    "presets": [
+        {
+            "name": "Brand Values",
+            "blocks": [
+                { "type": "value", "settings": { "icon": "leather", "title": "Full-Grain Leather", "description": "Sourced from the finest European tanneries" } },
+                { "type": "value", "settings": { "icon": "travel", "title": "Travel-Ready Design", "description": "Engineered for life in constant motion" } },
+                { "type": "value", "settings": { "icon": "craft", "title": "European Craft", "description": "Inspired by French and Italian ateliers" } },
+                { "type": "value", "settings": { "icon": "decades", "title": "Built for Decades", "description": "Materials that age with character" } }
+            ]
+        }
+    ]
+}
+{% endschema %}

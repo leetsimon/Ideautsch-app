@@ -1,0 +1,47 @@
+<section class="section testimonials-section">
+    <div class="container container-text">
+        <div class="section-header reveal">
+            <span class="sec-overline">{{ section.settings.overline }}</span>
+            <h2 class="sec-title">{{ section.settings.heading }}</h2>
+        </div>
+        {%- for block in section.blocks -%}
+            <div class="testimonial reveal" {{ block.shopify_attributes }}>
+                <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+                <blockquote class="testimonial-quote">"{{ block.settings.quote }}"</blockquote>
+                <p class="testimonial-author">{{ block.settings.author }}</p>
+                <p class="testimonial-location">{{ block.settings.location }}</p>
+            </div>
+            {%- unless forloop.last -%}<div class="divider"></div>{%- endunless -%}
+        {%- endfor -%}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Testimonials",
+    "settings": [
+        { "type": "text", "id": "overline", "label": "Overline", "default": "Testimonials" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Carried Worldwide" }
+    ],
+    "blocks": [
+        {
+            "type": "review",
+            "name": "Review",
+            "settings": [
+                { "type": "textarea", "id": "quote", "label": "Quote" },
+                { "type": "text", "id": "author", "label": "Author", "default": "Customer Name" },
+                { "type": "text", "id": "location", "label": "Location", "default": "City, Country" }
+            ]
+        }
+    ],
+    "max_blocks": 5,
+    "presets": [{
+        "name": "Testimonials",
+        "blocks": [
+            { "type": "review", "settings": { "quote": "The leather quality is extraordinary. I've carried the Voyager Tote through six countries and it only looks better.", "author": "Marcus K.", "location": "London, United Kingdom" } },
+            { "type": "review", "settings": { "quote": "Finally, a brand that understands what professionals need. Beautiful, organized, and built to last.", "author": "Sophia R.", "location": "New York, United States" } },
+            { "type": "review", "settings": { "quote": "Quiet, confident, timeless — exactly what I was looking for. I replaced my entire collection.", "author": "James D.", "location": "Paris, France" } }
+        ]
+    }]
+}
+{% endschema %}

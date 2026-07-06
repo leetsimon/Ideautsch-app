@@ -1,0 +1,74 @@
+<section class="section section-cream" id="story">
+    <div class="container container-narrow">
+        <div class="story-grid">
+            <div class="story-content reveal">
+                {%- if section.settings.overline != blank -%}
+                    <p class="story-overline">{{ section.settings.overline }}</p>
+                {%- endif -%}
+                <h2 class="story-title">{{ section.settings.heading }}</h2>
+                <div class="story-text">{{ section.settings.text }}</div>
+                {%- if section.settings.link_text != blank -%}
+                    <a href="{{ section.settings.link_url }}" class="story-cta">{{ section.settings.link_text }}</a>
+                {%- endif -%}
+            </div>
+            <div class="story-visual reveal">
+                {%- if section.settings.image != blank -%}
+                    <img 
+                        src="{{ section.settings.image | image_url: width: 800 }}" 
+                        alt="{{ section.settings.image.alt | default: 'Brand story' }}"
+                        class="story-img"
+                        loading="lazy">
+                {%- else -%}
+                    {{ 'lifestyle-2' | placeholder_svg_tag: 'story-placeholder' }}
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Brand Story",
+    "settings": [
+        {
+            "type": "text",
+            "id": "overline",
+            "label": "Overline",
+            "default": "Our Philosophy"
+        },
+        {
+            "type": "textarea",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Shaped by Movement. Defined by Precision."
+        },
+        {
+            "type": "richtext",
+            "id": "text",
+            "label": "Body text",
+            "default": "<p>Artyblanc exists at the intersection of French elegance and Italian craftsmanship tradition. We create leather goods for professionals who move through the world with purpose.</p><p>Every piece begins with a conviction: luxury should serve movement, not resist it. Our leather is sourced from tanneries that have perfected their craft over generations.</p>"
+        },
+        {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link text",
+            "default": "Read Our Story →"
+        },
+        {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Brand Story"
+        }
+    ]
+}
+{% endschema %}

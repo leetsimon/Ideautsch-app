@@ -1,0 +1,35 @@
+<nav class="nav" id="nav" aria-label="Main navigation">
+    <div class="nav-inner">
+        <a href="/" class="nav-logo" aria-label="{{ shop.name }} home">{{ shop.name }}</a>
+        <ul class="nav-links">
+            {%- for link in section.settings.menu.links -%}
+                <li><a href="{{ link.url }}" class="nav-link">{{ link.title }}</a></li>
+            {%- endfor -%}
+        </ul>
+        <div class="nav-actions">
+            <a href="{{ routes.search_url }}" class="nav-action">Search</a>
+            <a href="{{ routes.cart_url }}" class="nav-action cart-link">
+                Bag (<span class="cart-count">{{ cart.item_count }}</span>)
+            </a>
+        </div>
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+{% schema %}
+{
+    "name": "Header",
+    "settings": [
+        {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Navigation menu",
+            "default": "main-menu"
+        }
+    ]
+}
+{% endschema %}

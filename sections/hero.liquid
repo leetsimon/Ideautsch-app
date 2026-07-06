@@ -1,0 +1,70 @@
+<section class="hero" aria-label="Hero">
+    <div class="hero-bg">
+        {%- if section.settings.image != blank -%}
+            <img 
+                src="{{ section.settings.image | image_url: width: 1920 }}" 
+                alt="{{ section.settings.image.alt | default: section.settings.heading }}"
+                loading="eager"
+                fetchpriority="high"
+                width="1920"
+                height="1080">
+        {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-placeholder' }}
+        {%- endif -%}
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+        {%- if section.settings.overline != blank -%}
+            <p class="hero-overline">{{ section.settings.overline }}</p>
+        {%- endif -%}
+        <h1 class="hero-title">{{ section.settings.heading }}</h1>
+        {%- if section.settings.button_text != blank -%}
+            <a href="{{ section.settings.button_link }}" class="hero-cta">{{ section.settings.button_text }}</a>
+        {%- endif -%}
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+        <span>Scroll</span>
+        <div class="hero-scroll-line"></div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Hero Banner",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Background image"
+        },
+        {
+            "type": "text",
+            "id": "overline",
+            "label": "Overline text",
+            "default": "Artyblanc"
+        },
+        {
+            "type": "textarea",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Designed for movement between cities, work, and ambition."
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button text",
+            "default": "Discover the Collection"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Hero Banner"
+        }
+    ]
+}
+{% endschema %}

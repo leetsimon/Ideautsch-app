@@ -1,0 +1,37 @@
+<section class="section section-dark newsletter-section">
+    <div class="container">
+        <div class="newsletter reveal">
+            <p class="newsletter-overline">{{ section.settings.overline }}</p>
+            <h2 class="newsletter-title">{{ section.settings.heading }}</h2>
+            <p class="newsletter-text">{{ section.settings.subtitle }}</p>
+            {%- form 'customer', class: 'newsletter-form' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <input type="email" name="contact[email]"
+                    class="newsletter-input"
+                    placeholder="{{ section.settings.placeholder }}"
+                    required
+                    aria-label="Email address"
+                    autocomplete="email">
+                <button type="submit" class="newsletter-submit">
+                    {{ section.settings.button_text }}
+                </button>
+            {%- endform -%}
+            <p class="newsletter-disclaimer">{{ section.settings.disclaimer }}</p>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Newsletter",
+    "settings": [
+        { "type": "text", "id": "overline", "label": "Overline", "default": "Private Collection" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Join the Artyblanc Circle" },
+        { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "First access to new collections, travel inspiration, and stories from our atelier." },
+        { "type": "text", "id": "placeholder", "label": "Input placeholder", "default": "Your email address" },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "Join" },
+        { "type": "text", "id": "disclaimer", "label": "Disclaimer", "default": "We respect your privacy. Unsubscribe at any time." }
+    ],
+    "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

@@ -1,0 +1,82 @@
+<section class="section editorial-section" id="editorial">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="sec-overline">{{ section.settings.overline }}</span>
+            <h2 class="sec-title">{{ section.settings.heading }}</h2>
+        </div>
+        <div class="editorial-grid">
+            {%- for block in section.blocks -%}
+                <div class="editorial-item{% if block.settings.wide %} editorial-item--wide{% endif %} reveal" {{ block.shopify_attributes }}>
+                    {%- if block.settings.image != blank -%}
+                        <img 
+                            src="{{ block.settings.image | image_url: width: 1000 }}" 
+                            alt="{{ block.settings.image.alt | default: block.settings.caption }}"
+                            loading="lazy">
+                    {%- else -%}
+                        {{ 'lifestyle-1' | placeholder_svg_tag }}
+                    {%- endif -%}
+                    {%- if block.settings.caption != blank -%}
+                        <div class="editorial-caption"><span>{{ block.settings.caption }}</span></div>
+                    {%- endif -%}
+                </div>
+            {%- endfor -%}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Lifestyle Editorial",
+    "settings": [
+        {
+            "type": "text",
+            "id": "overline",
+            "label": "Overline",
+            "default": "Editorial"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "A Life in Motion"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image",
+            "name": "Editorial Image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "caption",
+                    "label": "Caption",
+                    "default": "Business & Precision"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "wide",
+                    "label": "Wide (span 2 columns)",
+                    "default": false
+                }
+            ]
+        }
+    ],
+    "max_blocks": 6,
+    "presets": [
+        {
+            "name": "Lifestyle Editorial",
+            "blocks": [
+                { "type": "image", "settings": { "caption": "Business & Precision", "wide": true } },
+                { "type": "image", "settings": { "caption": "Travel & Discovery", "wide": false } },
+                { "type": "image", "settings": { "caption": "Hotels & Retreats", "wide": false } },
+                { "type": "image", "settings": { "caption": "European Streets", "wide": true } }
+            ]
+        }
+    ]
+}
+{% endschema %}

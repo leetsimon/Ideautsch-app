@@ -1,0 +1,35 @@
+{%- comment -%}
+  Product card snippet
+  Usage: {% render 'product-card', product: product %}
+{%- endcomment -%}
+
+<article class="product-card">
+    <a href="{{ product.url }}" class="product-card-link" aria-label="{{ product.title }}">
+        <div class="product-card-img">
+            {%- if product.featured_image != blank -%}
+                <img
+                    src="{{ product.featured_image | image_url: width: 600 }}"
+                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                    width="600"
+                    height="800"
+                    loading="lazy">
+            {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'product-placeholder' }}
+            {%- endif -%}
+            <div class="product-card-overlay">
+                <span class="product-card-btn">View Details</span>
+            </div>
+            {%- if product.metafields.custom.badge != blank -%}
+                <span class="product-card-badge">{{ product.metafields.custom.badge }}</span>
+            {%- elsif product.available == false -%}
+                <span class="product-card-badge">Sold Out</span>
+            {%- elsif product.created_at > 'now' | date: '%s' | minus: 2592000 | date: '%Y-%m-%dT%H:%M:%S' -%}
+                <span class="product-card-badge">New</span>
+            {%- endif -%}
+        </div>
+        <div class="product-card-info">
+            <h3 class="product-card-name">{{ product.title }}</h3>
+            <p class="product-card-cat">{{ product.type }}</p>
+        </div>
+    </a>
+</article>

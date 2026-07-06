@@ -1,0 +1,36 @@
+[
+    {
+        "name": "theme_info",
+        "theme_name": "Artyblanc",
+        "theme_version": "1.0.0",
+        "theme_author": "Artyblanc Studio",
+        "theme_documentation_url": "https://artyblanc.com",
+        "theme_support_url": "https://artyblanc.com/contact"
+    },
+    {
+        "name": "Branding",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "favicon",
+                "label": "Favicon"
+            }
+        ]
+    },
+    {
+        "name": "Colors",
+        "settings": [
+            { "type": "color", "id": "color_primary", "label": "Primary (dark)", "default": "#1A1614" },
+            { "type": "color", "id": "color_accent", "label": "Accent (gold)", "default": "#C4A96A" },
+            { "type": "color", "id": "color_background", "label": "Background", "default": "#FDFBF7" },
+            { "type": "color", "id": "color_text", "label": "Body text", "default": "#3B3632" }
+        ]
+    },
+    {
+        "name": "Typography",
+        "settings": [
+            { "type": "font_picker", "id": "font_heading", "label": "Heading font", "default": "cormorant_garamond_n3" },
+            { "type": "font_picker", "id": "font_body", "label": "Body font", "default": "inter_n3" }
+        ]
+    }
+]
