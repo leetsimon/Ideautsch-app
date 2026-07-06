@@ -3,524 +3,1349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTYBLANC | European Luxury Leather Goods</title>
-    <meta name="description" content="Artyblanc creates European-crafted leather goods for professionals who move between cities, work, and ambition. Full-grain leather bags, wallets, and travel accessories.">
-    <meta name="keywords" content="luxury leather goods, leather bags, leather wallet, travel bags, European craftsmanship">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="ARTYBLANC | European Luxury Leather Goods">
-    <meta property="og:description" content="Designed for movement between cities, work, and ambition. Full-grain leather goods crafted in the European tradition.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://artyblanc.com">
-
-    <!-- Fonts -->
+    <title>ARTYBLANC — European Luxury Leather Goods</title>
+    <meta name="description" content="ARTYBLANC crafts premium full-grain leather goods for professionals in motion. European heritage, modern design.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/design-system.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/layouts.css">
-    <link rel="stylesheet" href="css/animations.css">
+        :root {
+            --ivory: #FDFBF7;
+            --cream: #F8F5F0;
+            --sand: #F0EBE3;
+            --taupe: #8B7E74;
+            --charcoal: #2C2825;
+            --gold: #C4A96A;
+            --dark: #0D0B0A;
+            --footer-dark: #0A0908;
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'Inter', sans-serif;
+        }
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231A1614'/%3E%3Ctext x='50%25' y='55%25' font-family='Georgia' font-size='18' fill='%23FDFBF7' text-anchor='middle' dominant-baseline='middle'%3EA%3C/text%3E%3C/svg%3E">
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--ivory);
+            color: var(--charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+            .hero__bg {
+                animation: none !important;
+            }
+            .hero__content {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            .scroll-indicator {
+                animation: none !important;
+            }
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav.scrolled {
+            padding: 1rem 3rem;
+            background: rgba(253, 251, 247, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(196, 169, 106, 0.1);
+        }
+
+        .nav__logo {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.4s;
+        }
+
+        .nav.scrolled .nav__logo {
+            color: var(--charcoal);
+        }
+
+        .nav__links {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav__links a {
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: color 0.3s, opacity 0.3s;
+            position: relative;
+        }
+
+        .nav__links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav__links a:hover::after {
+            width: 100%;
+        }
+
+        .nav.scrolled .nav__links a {
+            color: var(--charcoal);
+        }
+
+        .nav__actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav__actions a {
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav.scrolled .nav__actions a {
+            color: var(--charcoal);
+        }
+
+        .nav__hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav__hamburger span {
+            width: 24px;
+            height: 1.5px;
+            background: #fff;
+            transition: background 0.3s;
+        }
+
+        .nav.scrolled .nav__hamburger span {
+            background: var(--charcoal);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero__bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=1920&q=85&auto=format&fit=crop') center/cover no-repeat;
+            animation: heroZoom 20s ease-out forwards;
+        }
+
+        @keyframes heroZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        .hero__overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(10,9,8,0.35) 0%, rgba(10,9,8,0.55) 60%, rgba(10,9,8,0.7) 100%);
+        }
+
+        .hero__content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 820px;
+            padding: 0 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        }
+
+        @keyframes heroFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero__overline {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-variant: small-caps;
+        }
+
+        .hero__title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 300;
+            line-height: 1.2;
+            color: #fff;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .hero__cta {
+            display: inline-block;
+            padding: 1rem 2.8rem;
+            border: 1px solid rgba(255,255,255,0.6);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.4s;
+        }
+
+        .hero__cta:hover {
+            background: #fff;
+            color: var(--charcoal);
+            border-color: #fff;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scroll-indicator__line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.4; transform: scaleY(0.6); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        /* ===== BRAND VALUES ===== */
+        .values {
+            background: var(--cream);
+            padding: 8rem 3rem;
+        }
+
+        .values__grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        .values__item {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .values__icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 1.5rem;
+            color: var(--taupe);
+        }
+
+        .values__icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.2;
+        }
+
+        .values__title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            color: var(--charcoal);
+        }
+
+        .values__desc {
+            font-size: 0.85rem;
+            color: var(--taupe);
+            line-height: 1.7;
+        }
+
+        /* ===== FEATURED COLLECTION ===== */
+        .collection {
+            padding: 8rem 3rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-overline {
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 300;
+            color: var(--charcoal);
+        }
+
+        .collection__grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .product-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .product-card__image {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            background: var(--cream);
+        }
+
+        .product-card__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .product-card:hover .product-card__image img {
+            transform: scale(1.06);
+        }
+
+        .product-card__overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(44, 40, 37, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .product-card:hover .product-card__overlay {
+            opacity: 1;
+        }
+
+        .product-card__overlay-btn {
+            padding: 0.8rem 2rem;
+            border: 1px solid #fff;
+            color: #fff;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
+        }
+
+        .product-card:hover .product-card__overlay-btn {
+            transform: translateY(0);
+        }
+
+        .product-card__overlay-btn:hover {
+            background: #fff;
+            color: var(--charcoal);
+        }
+
+        .product-card__badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--charcoal);
+            color: #fff;
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0.4rem 0.8rem;
+            z-index: 2;
+        }
+
+        .product-card__info {
+            padding: 1.2rem 0 0;
+        }
+
+        .product-card__category {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--taupe);
+            margin-bottom: 0.3rem;
+        }
+
+        .product-card__name {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--charcoal);
+        }
+
+        .collection__more {
+            text-align: center;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            padding: 1rem 2.8rem;
+            border: 1px solid var(--charcoal);
+            color: var(--charcoal);
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.4s;
+        }
+
+        .btn-outline:hover {
+            background: var(--charcoal);
+            color: #fff;
+        }
+
+        /* ===== BRAND STORY ===== */
+        .story {
+            background: var(--cream);
+            padding: 8rem 3rem;
+        }
+
+        .story__inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .story__text .section-overline {
+            text-align: left;
+        }
+
+        .story__title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 2rem;
+            color: var(--charcoal);
+        }
+
+        .story__paragraph {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--taupe);
+            margin-bottom: 1.5rem;
+        }
+
+        .story__link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            color: var(--charcoal);
+            text-decoration: none;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 2px;
+            transition: color 0.3s;
+        }
+
+        .story__link:hover {
+            color: var(--gold);
+        }
+
+        .story__image {
+            height: 580px;
+            overflow: hidden;
+        }
+
+        .story__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ===== LIFESTYLE EDITORIAL ===== */
+        .editorial {
+            padding: 8rem 3rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .editorial__grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 320px;
+            gap: 1.5rem;
+        }
+
+        .editorial__item {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .editorial__item--wide {
+            grid-column: span 2;
+        }
+
+        .editorial__item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .editorial__item:hover img {
+            transform: scale(1.05);
+        }
+
+        .editorial__caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 1.5rem 1.5rem;
+            background: linear-gradient(to top, rgba(10,9,8,0.7), transparent);
+            color: #fff;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s, transform 0.4s;
+        }
+
+        .editorial__item:hover .editorial__caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== CRAFTSMANSHIP ===== */
+        .craftsmanship {
+            background: var(--sand);
+            padding: 8rem 3rem;
+        }
+
+        .craftsmanship__grid {
+            max-width: 1000px;
+            margin: 3rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
+
+        .craft-step {
+            padding: 2.5rem;
+        }
+
+        .craft-step__number {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .craft-step__title {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            color: var(--charcoal);
+        }
+
+        .craft-step__desc {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: var(--taupe);
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            padding: 8rem 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .testimonial {
+            padding: 3rem 0;
+        }
+
+        .testimonial__stars {
+            color: var(--gold);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial__quote {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--charcoal);
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial__author {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--charcoal);
+        }
+
+        .testimonial__city {
+            font-size: 0.75rem;
+            color: var(--taupe);
+            margin-top: 0.3rem;
+        }
+
+        .testimonial-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            margin: 0 auto;
+        }
+
+        /* ===== NEWSLETTER ===== */
+        .newsletter {
+            background: var(--dark);
+            padding: 7rem 3rem;
+            text-align: center;
+        }
+
+        .newsletter__overline {
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .newsletter__title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 300;
+            color: #fff;
+            margin-bottom: 2.5rem;
+        }
+
+        .newsletter__form {
+            display: flex;
+            max-width: 480px;
+            margin: 0 auto 1.5rem;
+            gap: 0;
+        }
+
+        .newsletter__input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-right: none;
+            background: transparent;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .newsletter__input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .newsletter__input:focus {
+            border-color: var(--gold);
+        }
+
+        .newsletter__btn {
+            padding: 1rem 2rem;
+            background: var(--gold);
+            border: 1px solid var(--gold);
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .newsletter__btn:hover {
+            background: #b8985c;
+        }
+
+        .newsletter__privacy {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--footer-dark);
+            padding: 5rem 3rem 3rem;
+        }
+
+        .footer__grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer__brand-logo {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            letter-spacing: 0.2em;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .footer__brand-tagline {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.6;
+        }
+
+        .footer__col-title {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer__col ul {
+            list-style: none;
+        }
+
+        .footer__col ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer__col ul li a {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer__col ul li a:hover {
+            color: var(--gold);
+        }
+
+        .footer__bottom {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer__copyright {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .footer__socials {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer__socials a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .footer__socials a:hover {
+            border-color: var(--gold);
+            background: rgba(196, 169, 106, 0.1);
+        }
+
+        .footer__socials svg {
+            width: 14px;
+            height: 14px;
+            fill: rgba(255,255,255,0.5);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .values__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .collection__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .story__inner {
+                gap: 3rem;
+            }
+            .editorial__grid {
+                grid-auto-rows: 260px;
+            }
+            .footer__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1.2rem 1.5rem;
+            }
+            .nav__links {
+                display: none;
+            }
+            .nav__hamburger {
+                display: flex;
+            }
+            .hero__title {
+                font-size: 2rem;
+            }
+            .values__grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+            .collection__grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            .story__inner {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            .story__image {
+                height: 400px;
+            }
+            .editorial__grid {
+                grid-template-columns: 1fr 1fr;
+                grid-auto-rows: 220px;
+            }
+            .editorial__item--wide {
+                grid-column: span 2;
+            }
+            .craftsmanship__grid {
+                grid-template-columns: 1fr;
+            }
+            .footer__grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .footer__bottom {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 1rem;
+            }
+            .values__grid {
+                grid-template-columns: 1fr;
+            }
+            .collection__grid {
+                grid-template-columns: 1fr;
+            }
+            .editorial__grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: 250px;
+            }
+            .editorial__item--wide {
+                grid-column: span 1;
+            }
+            .newsletter__form {
+                flex-direction: column;
+            }
+            .newsletter__input {
+                border-right: 1px solid rgba(255,255,255,0.2);
+                border-bottom: none;
+            }
+            .footer__grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-
-    <!-- Skip Link -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-
-
-    <!-- ═══════════════ NAVIGATION ═══════════════ -->
-    <nav class="nav" id="mainNav" aria-label="Main navigation">
-        <div class="nav__inner">
-            <a href="/" class="nav__logo" aria-label="Artyblanc home">ARTYBLANC</a>
-            <div class="nav__menu" role="navigation">
-                <a href="pages/shop.html" class="nav__link">Shop</a>
-                <a href="#collection" class="nav__link">Collection</a>
-                <a href="pages/about.html" class="nav__link">Our Story</a>
-                <a href="#editorial" class="nav__link">Journal</a>
-                <a href="pages/contact.html" class="nav__link">Contact</a>
-            </div>
-            <div class="nav__actions">
-                <a href="pages/shop.html" class="nav__action">Search</a>
-                <a href="#" class="nav__action">Cart (0)</a>
-            </div>
-            <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+    <!-- NAVIGATION -->
+    <nav class="nav" id="nav">
+        <a href="#" class="nav__logo">ARTYBLANC</a>
+        <ul class="nav__links">
+            <li><a href="#collection">Collection</a></li>
+            <li><a href="#story">Our Story</a></li>
+            <li><a href="#editorial">Journal</a></li>
+            <li><a href="#collection">Shop</a></li>
+        </ul>
+        <div class="nav__actions">
+            <a href="#">Search</a>
+            <a href="#">Bag (0)</a>
+        </div>
+        <div class="nav__hamburger" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
     </nav>
 
-    <main id="main-content">
-
-    <!-- ═══════════════ SECTION 1: HERO ═══════════════ -->
-    <section class="hero" id="hero" aria-label="Hero">
-        <div class="hero__bg">
-            <div class="hero__overlay"></div>
-            <img 
-                src="https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=1920&q=80&auto=format" 
-                alt="Business professional walking through luxury airport terminal with leather bag" 
-                class="hero__bg-image"
-                loading="eager"
-                fetchpriority="high">
-        </div>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero__bg"></div>
+        <div class="hero__overlay"></div>
         <div class="hero__content">
             <p class="hero__overline">Artyblanc</p>
-            <h1 class="hero__title">Designed for movement<br>between cities, work,<br>and ambition.</h1>
-            <a href="#collection" class="btn btn--ghost hero__cta">Discover the Collection</a>
+            <h1 class="hero__title">Designed for movement between cities, work, and ambition.</h1>
+            <a href="#collection" class="hero__cta">Discover the Collection</a>
         </div>
-        <div class="hero__scroll-cue" aria-hidden="true">
-            <span>Scroll</span>
+        <div class="scroll-indicator">
             <div class="scroll-indicator__line"></div>
         </div>
     </section>
 
-
-    <!-- ═══════════════ SECTION 2: BRAND VALUES ═══════════════ -->
-    <section class="values section--sm" id="values" aria-label="Brand values">
-        <div class="container">
-            <div class="values__grid">
-                <div class="values__item" data-reveal="fade" data-delay="1">
-                    <div class="values__icon">
-                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
-                            <path d="M22 4c-6 0-12 4-14 10-2 6 0 12 4 16 2 2 4 4 4 6v4h12v-4c0-2 2-4 4-6 4-4 6-10 4-16-2-6-8-10-14-10z"/>
-                            <path d="M16 36h12M18 40h8"/>
-                            <path d="M22 4v8M12 10l4 4M32 10l-4 4"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">Full-Grain Leather</h3>
-                    <p class="values__text">Selected from heritage European tanneries</p>
+    <!-- BRAND VALUES -->
+    <section class="values">
+        <div class="values__grid">
+            <div class="values__item reveal">
+                <div class="values__icon">
+                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4C12 4 6 10 6 18c0 6 4 11 8 14l6 4 6-4c4-3 8-8 8-14 0-8-6-14-14-14z" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 18c0-3.3 2.7-6 6-6" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <div class="values__item" data-reveal="fade" data-delay="2">
-                    <div class="values__icon">
-                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
-                            <circle cx="22" cy="22" r="16"/>
-                            <path d="M22 6v16l10 8"/>
-                            <path d="M6 22h4M34 22h4M22 6v3"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">Travel-Ready Design</h3>
-                    <p class="values__text">Engineered for a life in constant motion</p>
+                <h3 class="values__title">Full-Grain Leather</h3>
+                <p class="values__desc">Sourced from the finest European tanneries, our leather develops a rich patina that tells your story over time.</p>
+            </div>
+            <div class="values__item reveal">
+                <div class="values__icon">
+                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="14" stroke-linecap="round"/>
+                        <path d="M12 20h16M20 12v16M14 14l12 12M26 14L14 26" stroke-linecap="round" opacity="0.5"/>
+                        <circle cx="20" cy="20" r="3"/>
+                    </svg>
                 </div>
-                <div class="values__item" data-reveal="fade" data-delay="3">
-                    <div class="values__icon">
-                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
-                            <path d="M8 38l6-14 6 8 6-18 6 24"/>
-                            <rect x="6" y="6" width="32" height="32" rx="2"/>
-                            <circle cx="14" cy="14" r="3"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">European Craftsmanship</h3>
-                    <p class="values__text">Inspired by French and Italian ateliers</p>
+                <h3 class="values__title">Travel-Ready Design</h3>
+                <p class="values__desc">Every piece is engineered for the modern nomad — from airport terminals to boardroom tables, seamlessly.</p>
+            </div>
+            <div class="values__item reveal">
+                <div class="values__icon">
+                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 32l6-14 6 8 6-16 6 22" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="20" cy="10" r="4"/>
+                    </svg>
                 </div>
-                <div class="values__item" data-reveal="fade" data-delay="4">
-                    <div class="values__icon">
-                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
-                            <path d="M22 6v32M6 22h32"/>
-                            <path d="M12 12l20 20M32 12L12 32"/>
-                            <circle cx="22" cy="22" r="16"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">Built for Decades</h3>
-                    <p class="values__text">Materials that age with character and grace</p>
+                <h3 class="values__title">European Craft</h3>
+                <p class="values__desc">Designed in Paris, crafted in Italian workshops with generations of leather-working expertise.</p>
+            </div>
+            <div class="values__item reveal">
+                <div class="values__icon">
+                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="12" width="24" height="18" rx="2" stroke-linecap="round"/>
+                        <path d="M8 18h24" stroke-linecap="round"/>
+                        <path d="M20 6v6M16 8l4-2 4 2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
+                <h3 class="values__title">Built for Decades</h3>
+                <p class="values__desc">Reinforced construction and timeless silhouettes ensure each piece outlasts trends and seasons.</p>
             </div>
         </div>
     </section>
 
+    <!-- FEATURED COLLECTION -->
+    <section class="collection" id="collection">
+        <div class="section-header reveal">
+            <span class="section-overline">Curated Selection</span>
+            <h2 class="section-title">The Collection</h2>
+        </div>
+        <div class="collection__grid">
+            <div class="product-card reveal">
+                <div class="product-card__image">
+                    <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80&auto=format&fit=crop" alt="The Voyager Tote" loading="lazy">
+                    <div class="product-card__overlay">
+                        <a href="#" class="product-card__overlay-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="product-card__info">
+                    <p class="product-card__category">Travel</p>
+                    <h3 class="product-card__name">The Voyager Tote</h3>
+                </div>
+            </div>
+            <div class="product-card reveal">
+                <div class="product-card__image">
+                    <span class="product-card__badge">Bestseller</span>
+                    <img src="https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&q=80&auto=format&fit=crop" alt="The Essential Wallet" loading="lazy">
+                    <div class="product-card__overlay">
+                        <a href="#" class="product-card__overlay-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="product-card__info">
+                    <p class="product-card__category">Essentials</p>
+                    <h3 class="product-card__name">The Essential Wallet</h3>
+                </div>
+            </div>
+            <div class="product-card reveal">
+                <div class="product-card__image">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80&auto=format&fit=crop" alt="The Metropolitan Brief" loading="lazy">
+                    <div class="product-card__overlay">
+                        <a href="#" class="product-card__overlay-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="product-card__info">
+                    <p class="product-card__category">Professional</p>
+                    <h3 class="product-card__name">The Metropolitan Brief</h3>
+                </div>
+            </div>
+            <div class="product-card reveal">
+                <div class="product-card__image">
+                    <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&q=80&auto=format&fit=crop" alt="The Transit Crossbody" loading="lazy">
+                    <div class="product-card__overlay">
+                        <a href="#" class="product-card__overlay-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="product-card__info">
+                    <p class="product-card__category">Travel</p>
+                    <h3 class="product-card__name">The Transit Crossbody</h3>
+                </div>
+            </div>
+            <div class="product-card reveal">
+                <div class="product-card__image">
+                    <img src="https://images.unsplash.com/photo-1606522754091-a05f2e4ef784?w=600&q=80&auto=format&fit=crop" alt="The Cardholder" loading="lazy">
+                    <div class="product-card__overlay">
+                        <a href="#" class="product-card__overlay-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="product-card__info">
+                    <p class="product-card__category">Essentials</p>
+                    <h3 class="product-card__name">The Cardholder</h3>
+                </div>
+            </div>
+            <div class="product-card reveal">
+                <div class="product-card__image">
+                    <span class="product-card__badge">New</span>
+                    <img src="https://images.unsplash.com/photo-1547949003-9792a18a2601?w=600&q=80&auto=format&fit=crop" alt="The Weekender" loading="lazy">
+                    <div class="product-card__overlay">
+                        <a href="#" class="product-card__overlay-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="product-card__info">
+                    <p class="product-card__category">Travel</p>
+                    <h3 class="product-card__name">The Weekender</h3>
+                </div>
+            </div>
+        </div>
+        <div class="collection__more reveal">
+            <a href="#" class="btn-outline">View All Pieces</a>
+        </div>
+    </section>
 
-    <!-- ═══════════════ SECTION 3: FEATURED COLLECTION ═══════════════ -->
-    <section class="section" id="collection" aria-label="Featured collection">
-        <div class="container">
-            <div class="section-header" data-reveal="fade">
-                <span class="section-header__overline">The Collection</span>
-                <h2 class="section-header__title">Timeless Pieces for<br>Modern Movement</h2>
-                <p class="section-header__subtitle">Each piece designed to accompany professionals who navigate between cities, boardrooms, and quiet moments of travel.</p>
+    <!-- BRAND STORY -->
+    <section class="story" id="story">
+        <div class="story__inner">
+            <div class="story__text reveal">
+                <span class="section-overline">Our Philosophy</span>
+                <h2 class="story__title">Shaped by Movement. Defined by Precision.</h2>
+                <p class="story__paragraph">ARTYBLANC was born from a simple observation: the modern professional moves constantly — between cities, cultures, and ambitions — yet carries accessories designed for standing still. We set out to create leather goods that honour the pace of contemporary life without sacrificing the elegance of European tradition.</p>
+                <p class="story__paragraph">Every piece in our collection is designed in our Paris atelier and handcrafted by master artisans in Tuscany. We select only full-grain leathers from heritage tanneries, favouring materials that grow more beautiful with age. The result is a collection that bridges French sophistication with Italian craftsmanship — built for the decades ahead.</p>
+                <a href="#" class="story__link">Read Our Story &rarr;</a>
             </div>
-            <div class="collection-grid">
-                <article class="product-card" data-reveal="fade" data-delay="1">
-                    <div class="product-card__image-wrap hover-zoom">
-                        <img 
-                            src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80&auto=format" 
-                            alt="The Voyager Tote in cognac full-grain leather" 
-                            class="product-card__image"
-                            loading="lazy">
-                        <div class="product-card__overlay">
-                            <span class="product-card__quick-view">View Details</span>
-                        </div>
-                    </div>
-                    <div class="product-card__info">
-                        <h3 class="product-card__name">The Voyager Tote</h3>
-                        <p class="product-card__category">Travel Collection</p>
-                    </div>
-                </article>
-                <article class="product-card" data-reveal="fade" data-delay="2">
-                    <div class="product-card__image-wrap hover-zoom">
-                        <img 
-                            src="https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&q=80&auto=format" 
-                            alt="The Essential Wallet in black full-grain leather" 
-                            class="product-card__image"
-                            loading="lazy">
-                        <div class="product-card__overlay">
-                            <span class="product-card__quick-view">View Details</span>
-                        </div>
-                        <span class="product-card__badge">Bestseller</span>
-                    </div>
-                    <div class="product-card__info">
-                        <h3 class="product-card__name">The Essential Wallet</h3>
-                        <p class="product-card__category">Everyday Essentials</p>
-                    </div>
-                </article>
-                <article class="product-card" data-reveal="fade" data-delay="3">
-                    <div class="product-card__image-wrap hover-zoom">
-                        <img 
-                            src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80&auto=format" 
-                            alt="The Metropolitan Brief in dark brown leather" 
-                            class="product-card__image"
-                            loading="lazy">
-                        <div class="product-card__overlay">
-                            <span class="product-card__quick-view">View Details</span>
-                        </div>
-                    </div>
-                    <div class="product-card__info">
-                        <h3 class="product-card__name">The Metropolitan Brief</h3>
-                        <p class="product-card__category">Professional Collection</p>
-                    </div>
-                </article>
-                <article class="product-card" data-reveal="fade" data-delay="4">
-                    <div class="product-card__image-wrap hover-zoom">
-                        <img 
-                            src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&q=80&auto=format" 
-                            alt="The Transit Crossbody in tan leather" 
-                            class="product-card__image"
-                            loading="lazy">
-                        <div class="product-card__overlay">
-                            <span class="product-card__quick-view">View Details</span>
-                        </div>
-                    </div>
-                    <div class="product-card__info">
-                        <h3 class="product-card__name">The Transit Crossbody</h3>
-                        <p class="product-card__category">Travel Collection</p>
-                    </div>
-                </article>
-                <article class="product-card" data-reveal="fade" data-delay="5">
-                    <div class="product-card__image-wrap hover-zoom">
-                        <img 
-                            src="https://images.unsplash.com/photo-1606522754091-a05f2e4ef784?w=600&q=80&auto=format" 
-                            alt="The Cardholder in black vegetable-tanned leather" 
-                            class="product-card__image"
-                            loading="lazy">
-                        <div class="product-card__overlay">
-                            <span class="product-card__quick-view">View Details</span>
-                        </div>
-                    </div>
-                    <div class="product-card__info">
-                        <h3 class="product-card__name">The Cardholder</h3>
-                        <p class="product-card__category">Everyday Essentials</p>
-                    </div>
-                </article>
-                <article class="product-card" data-reveal="fade" data-delay="6">
-                    <div class="product-card__image-wrap hover-zoom">
-                        <img 
-                            src="https://images.unsplash.com/photo-1547949003-9792a18a2601?w=600&q=80&auto=format" 
-                            alt="The Weekender bag in cognac leather" 
-                            class="product-card__image"
-                            loading="lazy">
-                        <div class="product-card__overlay">
-                            <span class="product-card__quick-view">View Details</span>
-                        </div>
-                        <span class="product-card__badge">New</span>
-                    </div>
-                    <div class="product-card__info">
-                        <h3 class="product-card__name">The Weekender</h3>
-                        <p class="product-card__category">Travel Collection</p>
-                    </div>
-                </article>
-            </div>
-            <div style="text-align: center; margin-top: var(--space-16);" data-reveal="fade">
-                <a href="pages/shop.html" class="btn btn--secondary">View All Pieces</a>
+            <div class="story__image reveal">
+                <img src="https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800&q=80&auto=format&fit=crop" alt="ARTYBLANC craftsmanship">
             </div>
         </div>
     </section>
 
-
-    <!-- ═══════════════ SECTION 4: BRAND STORY ═══════════════ -->
-    <section class="section section--cream" id="story" aria-label="Brand story">
-        <div class="container container--content">
-            <div class="story">
-                <div class="story__content" data-reveal="slide-up">
-                    <span class="story__overline">Our Philosophy</span>
-                    <h2 class="story__title">Shaped by Movement.<br>Defined by Precision.</h2>
-                    <div class="story__text">
-                        <p>Artyblanc exists at the intersection of French elegance and Italian craftsmanship tradition. We create leather goods for professionals who move through the world with purpose — from morning flights to evening meetings, from European streets to hotel lobbies.</p>
-                        <p>Every piece begins with a conviction: luxury should serve movement, not resist it. Our leather is sourced from tanneries that have perfected their craft over generations. Our designs are minimal enough to endure decades, yet refined enough to be noticed in any room.</p>
-                    </div>
-                    <a href="pages/about.html" class="btn btn--text">Read Our Story →</a>
-                </div>
-                <div class="story__visual" data-reveal="fade" data-parallax="0.12">
-                    <img 
-                        src="https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800&q=80&auto=format" 
-                        alt="Artisan hands working with leather in a European atelier" 
-                        class="story__image"
-                        loading="lazy">
-                </div>
+    <!-- LIFESTYLE EDITORIAL -->
+    <section class="editorial" id="editorial">
+        <div class="section-header reveal">
+            <span class="section-overline">Journal</span>
+            <h2 class="section-title">A Life in Motion</h2>
+        </div>
+        <div class="editorial__grid">
+            <div class="editorial__item editorial__item--wide reveal">
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1000&q=80&auto=format&fit=crop" alt="Business lifestyle">
+                <div class="editorial__caption">Business</div>
+            </div>
+            <div class="editorial__item reveal">
+                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80&auto=format&fit=crop" alt="Travel lifestyle">
+                <div class="editorial__caption">Travel</div>
+            </div>
+            <div class="editorial__item reveal">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80&auto=format&fit=crop" alt="Hotels lifestyle">
+                <div class="editorial__caption">Hotels</div>
+            </div>
+            <div class="editorial__item editorial__item--wide reveal">
+                <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1000&q=80&auto=format&fit=crop" alt="European Streets">
+                <div class="editorial__caption">European Streets</div>
             </div>
         </div>
     </section>
 
-    <!-- ═══════════════ SECTION 5: LIFESTYLE EDITORIAL ═══════════════ -->
-    <section class="section" id="editorial" aria-label="Lifestyle editorial">
-        <div class="container">
-            <div class="section-header" data-reveal="fade">
-                <span class="section-header__overline">Editorial</span>
-                <h2 class="section-header__title">A Life in Motion</h2>
+    <!-- CRAFTSMANSHIP -->
+    <section class="craftsmanship">
+        <div class="section-header reveal">
+            <span class="section-overline">The Process</span>
+            <h2 class="section-title">Crafted with Intention</h2>
+        </div>
+        <div class="craftsmanship__grid">
+            <div class="craft-step reveal">
+                <div class="craft-step__number">01</div>
+                <h3 class="craft-step__title">Leather Selection</h3>
+                <p class="craft-step__desc">Each hide is hand-selected from European tanneries for its grain pattern, suppleness, and aging potential. Only 5% meet our exacting standards.</p>
             </div>
-            <div class="editorial-grid">
-                <div class="editorial-grid__item editorial-grid__item--wide" data-reveal="fade" data-delay="1">
-                    <img 
-                        src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=900&q=80&auto=format" 
-                        alt="Executive meeting in modern glass office" 
-                        class="editorial-grid__image"
-                        loading="lazy">
-                    <div class="editorial-grid__caption">
-                        <span>Business & Precision</span>
-                    </div>
-                </div>
-                <div class="editorial-grid__item editorial-grid__item--tall" data-reveal="fade" data-delay="2">
-                    <img 
-                        src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80&auto=format" 
-                        alt="Golden hour road through European countryside" 
-                        class="editorial-grid__image"
-                        loading="lazy">
-                    <div class="editorial-grid__caption">
-                        <span>Travel & Discovery</span>
-                    </div>
-                </div>
-                <div class="editorial-grid__item" data-reveal="fade" data-delay="3">
-                    <img 
-                        src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80&auto=format" 
-                        alt="Luxury hotel lobby with warm lighting" 
-                        class="editorial-grid__image"
-                        loading="lazy">
-                    <div class="editorial-grid__caption">
-                        <span>Hotels & Retreats</span>
-                    </div>
-                </div>
-                <div class="editorial-grid__item" data-reveal="fade" data-delay="4">
-                    <img 
-                        src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&auto=format" 
-                        alt="Morning coffee in a Parisian cafe" 
-                        class="editorial-grid__image"
-                        loading="lazy">
-                    <div class="editorial-grid__caption">
-                        <span>Morning Rituals</span>
-                    </div>
-                </div>
-                <div class="editorial-grid__item editorial-grid__item--wide" data-reveal="fade" data-delay="5">
-                    <img 
-                        src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&q=80&auto=format" 
-                        alt="Parisian street with classic architecture" 
-                        class="editorial-grid__image"
-                        loading="lazy">
-                    <div class="editorial-grid__caption">
-                        <span>European Streets</span>
-                    </div>
-                </div>
+            <div class="craft-step reveal">
+                <div class="craft-step__number">02</div>
+                <h3 class="craft-step__title">Hand Cutting</h3>
+                <p class="craft-step__desc">Master cutters trace each pattern by hand, following the natural contours of the leather to ensure maximum strength and beauty in every piece.</p>
+            </div>
+            <div class="craft-step reveal">
+                <div class="craft-step__number">03</div>
+                <h3 class="craft-step__title">Precision Assembly</h3>
+                <p class="craft-step__desc">Saddle-stitched seams and hand-burnished edges transform flat leather into sculptural forms. Each bag requires over 40 hours of skilled assembly.</p>
+            </div>
+            <div class="craft-step reveal">
+                <div class="craft-step__number">04</div>
+                <h3 class="craft-step__title">Final Inspection</h3>
+                <p class="craft-step__desc">Every finished piece undergoes a 27-point quality inspection before receiving the ARTYBLANC stamp — our promise of enduring excellence.</p>
             </div>
         </div>
     </section>
 
-
-    <!-- ═══════════════ SECTION 6: CRAFTSMANSHIP ═══════════════ -->
-    <section class="section section--sand" id="craftsmanship" aria-label="Craftsmanship process">
-        <div class="container container--content">
-            <div class="section-header" data-reveal="fade">
-                <span class="section-header__overline">The Process</span>
-                <h2 class="section-header__title">From Tannery to Atelier</h2>
-                <p class="section-header__subtitle">Every Artyblanc piece passes through four stages of meticulous creation before earning our name.</p>
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <div class="reveal">
+            <div class="testimonial">
+                <div class="testimonial__stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+                <p class="testimonial__quote">"The Voyager Tote has been my daily companion for two years now. The leather has developed the most beautiful patina — it genuinely gets better with every trip."</p>
+                <p class="testimonial__author">Alexandra M.</p>
+                <p class="testimonial__city">Paris, France</p>
             </div>
-            <div class="craft-grid">
-                <div class="craft-grid__item" data-reveal="fade" data-delay="1">
-                    <span class="craft-grid__number">01</span>
-                    <div class="craft-grid__content">
-                        <h3 class="craft-grid__title">Leather Selection</h3>
-                        <p class="craft-grid__text">Only 5% of hides meet our standard. We source exclusively from European tanneries with generations of expertise in vegetable-tanned, full-grain leather.</p>
-                    </div>
-                </div>
-                <div class="craft-grid__item" data-reveal="fade" data-delay="2">
-                    <span class="craft-grid__number">02</span>
-                    <div class="craft-grid__content">
-                        <h3 class="craft-grid__title">Hand Cutting</h3>
-                        <p class="craft-grid__text">Each panel is cut by hand to ensure the grain direction, color consistency, and natural markings create a unique character in every piece.</p>
-                    </div>
-                </div>
-                <div class="craft-grid__item" data-reveal="fade" data-delay="3">
-                    <span class="craft-grid__number">03</span>
-                    <div class="craft-grid__content">
-                        <h3 class="craft-grid__title">Precision Assembly</h3>
-                        <p class="craft-grid__text">Edges are burnished, seams are reinforced, and hardware is selected for both function and aesthetic — built to endure years of daily use.</p>
-                    </div>
-                </div>
-                <div class="craft-grid__item" data-reveal="fade" data-delay="4">
-                    <span class="craft-grid__number">04</span>
-                    <div class="craft-grid__content">
-                        <h3 class="craft-grid__title">Final Inspection</h3>
-                        <p class="craft-grid__text">Before any piece carries the Artyblanc name, it passes a 27-point quality inspection ensuring every detail meets our standard of quiet excellence.</p>
-                    </div>
-                </div>
+            <div class="testimonial-divider"></div>
+            <div class="testimonial">
+                <div class="testimonial__stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+                <p class="testimonial__quote">"I've owned luxury bags from larger houses, but nothing compares to the attention to detail here. The Metropolitan Brief is architecture in leather."</p>
+                <p class="testimonial__author">Thomas K.</p>
+                <p class="testimonial__city">Munich, Germany</p>
+            </div>
+            <div class="testimonial-divider"></div>
+            <div class="testimonial">
+                <div class="testimonial__stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+                <p class="testimonial__quote">"Understated, impeccably made, and designed for real life. ARTYBLANC understands that true luxury is in the details you feel, not just see."</p>
+                <p class="testimonial__author">Sofia R.</p>
+                <p class="testimonial__city">Milan, Italy</p>
             </div>
         </div>
     </section>
 
-    <!-- ═══════════════ SECTION 7: TESTIMONIALS ═══════════════ -->
-    <section class="section" id="testimonials" aria-label="Customer testimonials">
-        <div class="container container--narrow">
-            <div class="section-header" data-reveal="fade">
-                <span class="section-header__overline">Testimonials</span>
-                <h2 class="section-header__title">Carried Worldwide</h2>
-            </div>
-            <div class="testimonial" data-reveal="fade">
-                <div class="testimonial__stars" aria-label="5 out of 5 stars">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                </div>
-                <blockquote class="testimonial__text">"The leather quality is extraordinary. I've carried the Voyager Tote through six countries and it only looks better with time."</blockquote>
-                <p class="testimonial__author">Marcus K.</p>
-                <p class="testimonial__location">London, United Kingdom</p>
-            </div>
-            <div class="divider" data-reveal="fade"></div>
-            <div class="testimonial" data-reveal="fade">
-                <div class="testimonial__stars" aria-label="5 out of 5 stars">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                </div>
-                <blockquote class="testimonial__text">"Finally, a brand that understands what professionals actually need. Beautiful, organized, and built to last."</blockquote>
-                <p class="testimonial__author">Sophia R.</p>
-                <p class="testimonial__location">New York, United States</p>
-            </div>
-            <div class="divider" data-reveal="fade"></div>
-            <div class="testimonial" data-reveal="fade">
-                <div class="testimonial__stars" aria-label="5 out of 5 stars">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
-                </div>
-                <blockquote class="testimonial__text">"I replaced my entire collection with Artyblanc pieces. The aesthetic is exactly what I was looking for — quiet, confident, timeless."</blockquote>
-                <p class="testimonial__author">James D.</p>
-                <p class="testimonial__location">Paris, France</p>
-            </div>
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+        <div class="reveal">
+            <p class="newsletter__overline">Private Collection</p>
+            <h2 class="newsletter__title">Join the Artyblanc Circle</h2>
+            <form class="newsletter__form" onsubmit="event.preventDefault();">
+                <input type="email" class="newsletter__input" placeholder="Your email address" aria-label="Email address">
+                <button type="submit" class="newsletter__btn">Join</button>
+            </form>
+            <p class="newsletter__privacy">We respect your privacy. Unsubscribe at any time.</p>
         </div>
     </section>
 
-
-    <!-- ═══════════════ SECTION 8: NEWSLETTER ═══════════════ -->
-    <section class="section section--dark" id="newsletter" aria-label="Newsletter signup">
-        <div class="container">
-            <div class="newsletter">
-                <div class="newsletter__content" data-reveal="fade">
-                    <span class="newsletter__overline">Private Collection</span>
-                    <h2 class="newsletter__title">Join the Artyblanc Circle</h2>
-                    <p class="newsletter__subtitle">First access to new collections, travel inspiration, and stories from our atelier. No noise — only what matters.</p>
-                    <form class="newsletter__form" action="#" method="post" aria-label="Newsletter subscription">
-                        <div class="newsletter__input-group">
-                            <input 
-                                type="email" 
-                                class="newsletter__input" 
-                                placeholder="Your email address" 
-                                required 
-                                aria-label="Email address"
-                                autocomplete="email">
-                            <button type="submit" class="newsletter__submit">Join</button>
-                        </div>
-                    </form>
-                    <p class="newsletter__disclaimer">We respect your privacy. Unsubscribe at any time.</p>
-                </div>
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer__grid">
+            <div class="footer__col">
+                <div class="footer__brand-logo">ARTYBLANC</div>
+                <p class="footer__brand-tagline">European luxury leather goods designed for professionals in motion. Crafted in Italy, designed in Paris.</p>
+            </div>
+            <div class="footer__col">
+                <h4 class="footer__col-title">Collections</h4>
+                <ul>
+                    <li><a href="#">All Products</a></li>
+                    <li><a href="#">Leather Bags</a></li>
+                    <li><a href="#">Wallets</a></li>
+                    <li><a href="#">Travel Bags</a></li>
+                    <li><a href="#">New Arrivals</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <h4 class="footer__col-title">Company</h4>
+                <ul>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#">Craftsmanship</a></li>
+                    <li><a href="#">Journal</a></li>
+                    <li><a href="#">Sustainability</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <h4 class="footer__col-title">Support</h4>
+                <ul>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Leather Care</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    </main>
-
-    <!-- ═══════════════ SECTION 9: FOOTER ═══════════════ -->
-    <footer class="footer" id="footer" role="contentinfo">
-        <div class="container">
-            <div class="footer__grid">
-                <div class="footer__brand">
-                    <a href="/" class="footer__brand-logo">ARTYBLANC</a>
-                    <p class="footer__tagline">European-crafted leather goods<br>for lives in motion.</p>
-                </div>
-                <div class="footer__column">
-                    <h4 class="footer__heading">Collections</h4>
-                    <ul class="footer__links">
-                        <li><a href="pages/shop.html">All Products</a></li>
-                        <li><a href="#">Leather Bags</a></li>
-                        <li><a href="#">Wallets & Cardholders</a></li>
-                        <li><a href="#">Travel Bags</a></li>
-                        <li><a href="#">New Arrivals</a></li>
-                    </ul>
-                </div>
-                <div class="footer__column">
-                    <h4 class="footer__heading">Company</h4>
-                    <ul class="footer__links">
-                        <li><a href="pages/about.html">Our Story</a></li>
-                        <li><a href="#">Craftsmanship</a></li>
-                        <li><a href="#">Journal</a></li>
-                        <li><a href="#">Sustainability</a></li>
-                        <li><a href="#">Press</a></li>
-                    </ul>
-                </div>
-                <div class="footer__column">
-                    <h4 class="footer__heading">Support</h4>
-                    <ul class="footer__links">
-                        <li><a href="#">Shipping & Delivery</a></li>
-                        <li><a href="#">Returns & Exchanges</a></li>
-                        <li><a href="#">Leather Care Guide</a></li>
-                        <li><a href="pages/contact.html">Contact Us</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer__bottom">
-                <p class="footer__copyright">&copy; 2026 Artyblanc. All rights reserved.</p>
-                <div class="footer__social">
-                    <a href="#" class="footer__social-link" aria-label="Instagram">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="2" y="2" width="20" height="20" rx="5"/>
-                            <circle cx="12" cy="12" r="5"/>
-                            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="footer__social-link" aria-label="Pinterest">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 7c-3 0-5 2-5 4.5 0 1.5.8 2.8 2 3.2-.1-.5 0-1 .2-1.5l.8-3s-.2-.4-.2-1c0-1 .5-1.7 1.2-1.7.6 0 .9.4.9 1 0 .6-.4 1.5-.6 2.3-.2.8.4 1.4 1.1 1.4 1.3 0 2.2-1.7 2.2-3.7 0-1.5-1-2.7-2.8-2.7-2 0-3.3 1.5-3.3 3.2 0 .6.2 1 .4 1.3.1.1.1.2.1.3l-.2.6c0 .1-.1.2-.3.1-1-.4-1.4-1.4-1.4-2.5 0-1.9 1.6-4.2 4.8-4.2 2.6 0 4.3 1.9 4.3 3.9 0 2.6-1.4 4.5-3.5 4.5-.7 0-1.4-.4-1.6-.8l-.5 1.7c-.2.6-.5 1.1-.8 1.5"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="footer__social-link" aria-label="LinkedIn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="2" y="2" width="20" height="20" rx="3"/>
-                            <path d="M7 10v7M7 7v.01M11 10v7m0-4c0-2 1.5-3 3-3s3 1 3 3v4"/>
-                        </svg>
-                    </a>
-                </div>
+        <div class="footer__bottom">
+            <p class="footer__copyright">&copy; 2024 ARTYBLANC. All rights reserved.</p>
+            <div class="footer__socials">
+                <a href="#" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+                <a href="#" aria-label="Pinterest">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345c-.091.378-.293 1.194-.332 1.361-.053.218-.174.265-.402.159-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="#" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
+    <script>
+        // Nav scroll detection
+        const nav = document.getElementById('nav');
+        let lastScroll = 0;
+
+        function handleNavScroll() {
+            const scrollY = window.scrollY;
+            if (scrollY > 80) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            lastScroll = scrollY;
+        }
+
+        window.addEventListener('scroll', handleNavScroll, { passive: true });
+
+        // IntersectionObserver for reveal animations
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '-50px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
