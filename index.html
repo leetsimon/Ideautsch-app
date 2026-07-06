@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTYBLANC | European Luxury Leather Goods</title>
+    <meta name="description" content="Artyblanc creates European-crafted leather goods for professionals who move between cities, work, and ambition. Full-grain leather bags, wallets, and travel accessories.">
+    <meta name="keywords" content="luxury leather goods, leather bags, leather wallet, travel bags, European craftsmanship">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="ARTYBLANC | European Luxury Leather Goods">
+    <meta property="og:description" content="Designed for movement between cities, work, and ambition. Full-grain leather goods crafted in the European tradition.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://artyblanc.com">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layouts.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231A1614'/%3E%3Ctext x='50%25' y='55%25' font-family='Georgia' font-size='18' fill='%23FDFBF7' text-anchor='middle' dominant-baseline='middle'%3EA%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+    <!-- ═══════════════ NAVIGATION ═══════════════ -->
+    <nav class="nav" id="mainNav" aria-label="Main navigation">
+        <div class="nav__inner">
+            <a href="/" class="nav__logo" aria-label="Artyblanc home">ARTYBLANC</a>
+            <div class="nav__menu" role="navigation">
+                <a href="pages/shop.html" class="nav__link">Shop</a>
+                <a href="#collection" class="nav__link">Collection</a>
+                <a href="pages/about.html" class="nav__link">Our Story</a>
+                <a href="#editorial" class="nav__link">Journal</a>
+                <a href="pages/contact.html" class="nav__link">Contact</a>
+            </div>
+            <div class="nav__actions">
+                <a href="pages/shop.html" class="nav__action">Search</a>
+                <a href="#" class="nav__action">Cart (0)</a>
+            </div>
+            <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+
+    <!-- ═══════════════ SECTION 1: HERO ═══════════════ -->
+    <section class="hero" id="hero" aria-label="Hero">
+        <div class="hero__bg">
+            <div class="hero__overlay"></div>
+            <img 
+                src="https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=1920&q=80&auto=format" 
+                alt="Business professional walking through luxury airport terminal with leather bag" 
+                class="hero__bg-image"
+                loading="eager"
+                fetchpriority="high">
+        </div>
+        <div class="hero__content">
+            <p class="hero__overline">Artyblanc</p>
+            <h1 class="hero__title">Designed for movement<br>between cities, work,<br>and ambition.</h1>
+            <a href="#collection" class="btn btn--ghost hero__cta">Discover the Collection</a>
+        </div>
+        <div class="hero__scroll-cue" aria-hidden="true">
+            <span>Scroll</span>
+            <div class="scroll-indicator__line"></div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════ SECTION 2: BRAND VALUES ═══════════════ -->
+    <section class="values section--sm" id="values" aria-label="Brand values">
+        <div class="container">
+            <div class="values__grid">
+                <div class="values__item" data-reveal="fade" data-delay="1">
+                    <div class="values__icon">
+                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M22 4c-6 0-12 4-14 10-2 6 0 12 4 16 2 2 4 4 4 6v4h12v-4c0-2 2-4 4-6 4-4 6-10 4-16-2-6-8-10-14-10z"/>
+                            <path d="M16 36h12M18 40h8"/>
+                            <path d="M22 4v8M12 10l4 4M32 10l-4 4"/>
+                        </svg>
+                    </div>
+                    <h3 class="values__title">Full-Grain Leather</h3>
+                    <p class="values__text">Selected from heritage European tanneries</p>
+                </div>
+                <div class="values__item" data-reveal="fade" data-delay="2">
+                    <div class="values__icon">
+                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
+                            <circle cx="22" cy="22" r="16"/>
+                            <path d="M22 6v16l10 8"/>
+                            <path d="M6 22h4M34 22h4M22 6v3"/>
+                        </svg>
+                    </div>
+                    <h3 class="values__title">Travel-Ready Design</h3>
+                    <p class="values__text">Engineered for a life in constant motion</p>
+                </div>
+                <div class="values__item" data-reveal="fade" data-delay="3">
+                    <div class="values__icon">
+                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M8 38l6-14 6 8 6-18 6 24"/>
+                            <rect x="6" y="6" width="32" height="32" rx="2"/>
+                            <circle cx="14" cy="14" r="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="values__title">European Craftsmanship</h3>
+                    <p class="values__text">Inspired by French and Italian ateliers</p>
+                </div>
+                <div class="values__item" data-reveal="fade" data-delay="4">
+                    <div class="values__icon">
+                        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M22 6v32M6 22h32"/>
+                            <path d="M12 12l20 20M32 12L12 32"/>
+                            <circle cx="22" cy="22" r="16"/>
+                        </svg>
+                    </div>
+                    <h3 class="values__title">Built for Decades</h3>
+                    <p class="values__text">Materials that age with character and grace</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════ SECTION 3: FEATURED COLLECTION ═══════════════ -->
+    <section class="section" id="collection" aria-label="Featured collection">
+        <div class="container">
+            <div class="section-header" data-reveal="fade">
+                <span class="section-header__overline">The Collection</span>
+                <h2 class="section-header__title">Timeless Pieces for<br>Modern Movement</h2>
+                <p class="section-header__subtitle">Each piece designed to accompany professionals who navigate between cities, boardrooms, and quiet moments of travel.</p>
+            </div>
+            <div class="collection-grid">
+                <article class="product-card" data-reveal="fade" data-delay="1">
+                    <div class="product-card__image-wrap hover-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80&auto=format" 
+                            alt="The Voyager Tote in cognac full-grain leather" 
+                            class="product-card__image"
+                            loading="lazy">
+                        <div class="product-card__overlay">
+                            <span class="product-card__quick-view">View Details</span>
+                        </div>
+                    </div>
+                    <div class="product-card__info">
+                        <h3 class="product-card__name">The Voyager Tote</h3>
+                        <p class="product-card__category">Travel Collection</p>
+                    </div>
+                </article>
+                <article class="product-card" data-reveal="fade" data-delay="2">
+                    <div class="product-card__image-wrap hover-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&q=80&auto=format" 
+                            alt="The Essential Wallet in black full-grain leather" 
+                            class="product-card__image"
+                            loading="lazy">
+                        <div class="product-card__overlay">
+                            <span class="product-card__quick-view">View Details</span>
+                        </div>
+                        <span class="product-card__badge">Bestseller</span>
+                    </div>
+                    <div class="product-card__info">
+                        <h3 class="product-card__name">The Essential Wallet</h3>
+                        <p class="product-card__category">Everyday Essentials</p>
+                    </div>
+                </article>
+                <article class="product-card" data-reveal="fade" data-delay="3">
+                    <div class="product-card__image-wrap hover-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80&auto=format" 
+                            alt="The Metropolitan Brief in dark brown leather" 
+                            class="product-card__image"
+                            loading="lazy">
+                        <div class="product-card__overlay">
+                            <span class="product-card__quick-view">View Details</span>
+                        </div>
+                    </div>
+                    <div class="product-card__info">
+                        <h3 class="product-card__name">The Metropolitan Brief</h3>
+                        <p class="product-card__category">Professional Collection</p>
+                    </div>
+                </article>
+                <article class="product-card" data-reveal="fade" data-delay="4">
+                    <div class="product-card__image-wrap hover-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&q=80&auto=format" 
+                            alt="The Transit Crossbody in tan leather" 
+                            class="product-card__image"
+                            loading="lazy">
+                        <div class="product-card__overlay">
+                            <span class="product-card__quick-view">View Details</span>
+                        </div>
+                    </div>
+                    <div class="product-card__info">
+                        <h3 class="product-card__name">The Transit Crossbody</h3>
+                        <p class="product-card__category">Travel Collection</p>
+                    </div>
+                </article>
+                <article class="product-card" data-reveal="fade" data-delay="5">
+                    <div class="product-card__image-wrap hover-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1606522754091-a05f2e4ef784?w=600&q=80&auto=format" 
+                            alt="The Cardholder in black vegetable-tanned leather" 
+                            class="product-card__image"
+                            loading="lazy">
+                        <div class="product-card__overlay">
+                            <span class="product-card__quick-view">View Details</span>
+                        </div>
+                    </div>
+                    <div class="product-card__info">
+                        <h3 class="product-card__name">The Cardholder</h3>
+                        <p class="product-card__category">Everyday Essentials</p>
+                    </div>
+                </article>
+                <article class="product-card" data-reveal="fade" data-delay="6">
+                    <div class="product-card__image-wrap hover-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1547949003-9792a18a2601?w=600&q=80&auto=format" 
+                            alt="The Weekender bag in cognac leather" 
+                            class="product-card__image"
+                            loading="lazy">
+                        <div class="product-card__overlay">
+                            <span class="product-card__quick-view">View Details</span>
+                        </div>
+                        <span class="product-card__badge">New</span>
+                    </div>
+                    <div class="product-card__info">
+                        <h3 class="product-card__name">The Weekender</h3>
+                        <p class="product-card__category">Travel Collection</p>
+                    </div>
+                </article>
+            </div>
+            <div style="text-align: center; margin-top: var(--space-16);" data-reveal="fade">
+                <a href="pages/shop.html" class="btn btn--secondary">View All Pieces</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════ SECTION 4: BRAND STORY ═══════════════ -->
+    <section class="section section--cream" id="story" aria-label="Brand story">
+        <div class="container container--content">
+            <div class="story">
+                <div class="story__content" data-reveal="slide-up">
+                    <span class="story__overline">Our Philosophy</span>
+                    <h2 class="story__title">Shaped by Movement.<br>Defined by Precision.</h2>
+                    <div class="story__text">
+                        <p>Artyblanc exists at the intersection of French elegance and Italian craftsmanship tradition. We create leather goods for professionals who move through the world with purpose — from morning flights to evening meetings, from European streets to hotel lobbies.</p>
+                        <p>Every piece begins with a conviction: luxury should serve movement, not resist it. Our leather is sourced from tanneries that have perfected their craft over generations. Our designs are minimal enough to endure decades, yet refined enough to be noticed in any room.</p>
+                    </div>
+                    <a href="pages/about.html" class="btn btn--text">Read Our Story →</a>
+                </div>
+                <div class="story__visual" data-reveal="fade" data-parallax="0.12">
+                    <img 
+                        src="https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800&q=80&auto=format" 
+                        alt="Artisan hands working with leather in a European atelier" 
+                        class="story__image"
+                        loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SECTION 5: LIFESTYLE EDITORIAL ═══════════════ -->
+    <section class="section" id="editorial" aria-label="Lifestyle editorial">
+        <div class="container">
+            <div class="section-header" data-reveal="fade">
+                <span class="section-header__overline">Editorial</span>
+                <h2 class="section-header__title">A Life in Motion</h2>
+            </div>
+            <div class="editorial-grid">
+                <div class="editorial-grid__item editorial-grid__item--wide" data-reveal="fade" data-delay="1">
+                    <img 
+                        src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=900&q=80&auto=format" 
+                        alt="Executive meeting in modern glass office" 
+                        class="editorial-grid__image"
+                        loading="lazy">
+                    <div class="editorial-grid__caption">
+                        <span>Business & Precision</span>
+                    </div>
+                </div>
+                <div class="editorial-grid__item editorial-grid__item--tall" data-reveal="fade" data-delay="2">
+                    <img 
+                        src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80&auto=format" 
+                        alt="Golden hour road through European countryside" 
+                        class="editorial-grid__image"
+                        loading="lazy">
+                    <div class="editorial-grid__caption">
+                        <span>Travel & Discovery</span>
+                    </div>
+                </div>
+                <div class="editorial-grid__item" data-reveal="fade" data-delay="3">
+                    <img 
+                        src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80&auto=format" 
+                        alt="Luxury hotel lobby with warm lighting" 
+                        class="editorial-grid__image"
+                        loading="lazy">
+                    <div class="editorial-grid__caption">
+                        <span>Hotels & Retreats</span>
+                    </div>
+                </div>
+                <div class="editorial-grid__item" data-reveal="fade" data-delay="4">
+                    <img 
+                        src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&auto=format" 
+                        alt="Morning coffee in a Parisian cafe" 
+                        class="editorial-grid__image"
+                        loading="lazy">
+                    <div class="editorial-grid__caption">
+                        <span>Morning Rituals</span>
+                    </div>
+                </div>
+                <div class="editorial-grid__item editorial-grid__item--wide" data-reveal="fade" data-delay="5">
+                    <img 
+                        src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&q=80&auto=format" 
+                        alt="Parisian street with classic architecture" 
+                        class="editorial-grid__image"
+                        loading="lazy">
+                    <div class="editorial-grid__caption">
+                        <span>European Streets</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════ SECTION 6: CRAFTSMANSHIP ═══════════════ -->
+    <section class="section section--sand" id="craftsmanship" aria-label="Craftsmanship process">
+        <div class="container container--content">
+            <div class="section-header" data-reveal="fade">
+                <span class="section-header__overline">The Process</span>
+                <h2 class="section-header__title">From Tannery to Atelier</h2>
+                <p class="section-header__subtitle">Every Artyblanc piece passes through four stages of meticulous creation before earning our name.</p>
+            </div>
+            <div class="craft-grid">
+                <div class="craft-grid__item" data-reveal="fade" data-delay="1">
+                    <span class="craft-grid__number">01</span>
+                    <div class="craft-grid__content">
+                        <h3 class="craft-grid__title">Leather Selection</h3>
+                        <p class="craft-grid__text">Only 5% of hides meet our standard. We source exclusively from European tanneries with generations of expertise in vegetable-tanned, full-grain leather.</p>
+                    </div>
+                </div>
+                <div class="craft-grid__item" data-reveal="fade" data-delay="2">
+                    <span class="craft-grid__number">02</span>
+                    <div class="craft-grid__content">
+                        <h3 class="craft-grid__title">Hand Cutting</h3>
+                        <p class="craft-grid__text">Each panel is cut by hand to ensure the grain direction, color consistency, and natural markings create a unique character in every piece.</p>
+                    </div>
+                </div>
+                <div class="craft-grid__item" data-reveal="fade" data-delay="3">
+                    <span class="craft-grid__number">03</span>
+                    <div class="craft-grid__content">
+                        <h3 class="craft-grid__title">Precision Assembly</h3>
+                        <p class="craft-grid__text">Edges are burnished, seams are reinforced, and hardware is selected for both function and aesthetic — built to endure years of daily use.</p>
+                    </div>
+                </div>
+                <div class="craft-grid__item" data-reveal="fade" data-delay="4">
+                    <span class="craft-grid__number">04</span>
+                    <div class="craft-grid__content">
+                        <h3 class="craft-grid__title">Final Inspection</h3>
+                        <p class="craft-grid__text">Before any piece carries the Artyblanc name, it passes a 27-point quality inspection ensuring every detail meets our standard of quiet excellence.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SECTION 7: TESTIMONIALS ═══════════════ -->
+    <section class="section" id="testimonials" aria-label="Customer testimonials">
+        <div class="container container--narrow">
+            <div class="section-header" data-reveal="fade">
+                <span class="section-header__overline">Testimonials</span>
+                <h2 class="section-header__title">Carried Worldwide</h2>
+            </div>
+            <div class="testimonial" data-reveal="fade">
+                <div class="testimonial__stars" aria-label="5 out of 5 stars">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                </div>
+                <blockquote class="testimonial__text">"The leather quality is extraordinary. I've carried the Voyager Tote through six countries and it only looks better with time."</blockquote>
+                <p class="testimonial__author">Marcus K.</p>
+                <p class="testimonial__location">London, United Kingdom</p>
+            </div>
+            <div class="divider" data-reveal="fade"></div>
+            <div class="testimonial" data-reveal="fade">
+                <div class="testimonial__stars" aria-label="5 out of 5 stars">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                </div>
+                <blockquote class="testimonial__text">"Finally, a brand that understands what professionals actually need. Beautiful, organized, and built to last."</blockquote>
+                <p class="testimonial__author">Sophia R.</p>
+                <p class="testimonial__location">New York, United States</p>
+            </div>
+            <div class="divider" data-reveal="fade"></div>
+            <div class="testimonial" data-reveal="fade">
+                <div class="testimonial__stars" aria-label="5 out of 5 stars">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.5L8 12.5l-4.9 2.7.9-5.5-4-3.9L5.5 5z"/></svg>
+                </div>
+                <blockquote class="testimonial__text">"I replaced my entire collection with Artyblanc pieces. The aesthetic is exactly what I was looking for — quiet, confident, timeless."</blockquote>
+                <p class="testimonial__author">James D.</p>
+                <p class="testimonial__location">Paris, France</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════ SECTION 8: NEWSLETTER ═══════════════ -->
+    <section class="section section--dark" id="newsletter" aria-label="Newsletter signup">
+        <div class="container">
+            <div class="newsletter">
+                <div class="newsletter__content" data-reveal="fade">
+                    <span class="newsletter__overline">Private Collection</span>
+                    <h2 class="newsletter__title">Join the Artyblanc Circle</h2>
+                    <p class="newsletter__subtitle">First access to new collections, travel inspiration, and stories from our atelier. No noise — only what matters.</p>
+                    <form class="newsletter__form" action="#" method="post" aria-label="Newsletter subscription">
+                        <div class="newsletter__input-group">
+                            <input 
+                                type="email" 
+                                class="newsletter__input" 
+                                placeholder="Your email address" 
+                                required 
+                                aria-label="Email address"
+                                autocomplete="email">
+                            <button type="submit" class="newsletter__submit">Join</button>
+                        </div>
+                    </form>
+                    <p class="newsletter__disclaimer">We respect your privacy. Unsubscribe at any time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- ═══════════════ SECTION 9: FOOTER ═══════════════ -->
+    <footer class="footer" id="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer__grid">
+                <div class="footer__brand">
+                    <a href="/" class="footer__brand-logo">ARTYBLANC</a>
+                    <p class="footer__tagline">European-crafted leather goods<br>for lives in motion.</p>
+                </div>
+                <div class="footer__column">
+                    <h4 class="footer__heading">Collections</h4>
+                    <ul class="footer__links">
+                        <li><a href="pages/shop.html">All Products</a></li>
+                        <li><a href="#">Leather Bags</a></li>
+                        <li><a href="#">Wallets & Cardholders</a></li>
+                        <li><a href="#">Travel Bags</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                    </ul>
+                </div>
+                <div class="footer__column">
+                    <h4 class="footer__heading">Company</h4>
+                    <ul class="footer__links">
+                        <li><a href="pages/about.html">Our Story</a></li>
+                        <li><a href="#">Craftsmanship</a></li>
+                        <li><a href="#">Journal</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer__column">
+                    <h4 class="footer__heading">Support</h4>
+                    <ul class="footer__links">
+                        <li><a href="#">Shipping & Delivery</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                        <li><a href="#">Leather Care Guide</a></li>
+                        <li><a href="pages/contact.html">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p class="footer__copyright">&copy; 2026 Artyblanc. All rights reserved.</p>
+                <div class="footer__social">
+                    <a href="#" class="footer__social-link" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="20" rx="5"/>
+                            <circle cx="12" cy="12" r="5"/>
+                            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="footer__social-link" aria-label="Pinterest">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 7c-3 0-5 2-5 4.5 0 1.5.8 2.8 2 3.2-.1-.5 0-1 .2-1.5l.8-3s-.2-.4-.2-1c0-1 .5-1.7 1.2-1.7.6 0 .9.4.9 1 0 .6-.4 1.5-.6 2.3-.2.8.4 1.4 1.1 1.4 1.3 0 2.2-1.7 2.2-3.7 0-1.5-1-2.7-2.8-2.7-2 0-3.3 1.5-3.3 3.2 0 .6.2 1 .4 1.3.1.1.1.2.1.3l-.2.6c0 .1-.1.2-.3.1-1-.4-1.4-1.4-1.4-2.5 0-1.9 1.6-4.2 4.8-4.2 2.6 0 4.3 1.9 4.3 3.9 0 2.6-1.4 4.5-3.5 4.5-.7 0-1.4-.4-1.6-.8l-.5 1.7c-.2.6-.5 1.1-.8 1.5"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="footer__social-link" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="20" rx="3"/>
+                            <path d="M7 10v7M7 7v.01M11 10v7m0-4c0-2 1.5-3 3-3s3 1 3 3v4"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>
