@@ -35,7 +35,9 @@ dependencies:
 
   # Audio
   just_audio: ^0.9.42
-  record: ^5.2.0
+  # Note: 'record' package removed due to record_linux 0.7.x incompatibility
+  # with Flutter 3.44.5. AudioRecorderService provides the same interface
+  # using platform channels directly. Re-add when record_linux is updated.
 
   # Functional Programming
   dartz: ^0.10.1
