@@ -50,7 +50,7 @@ const Map<String, dynamic> missionZeroData = {
     'statement_en':
         'After this mission, the learner can answer a professional phone call in German using the complete call center greeting formula: company name, personal identification, and offer to help.',
     'statement_darija':
-        'بعد هاد المهمة، المتعلم يقدر يجاوب على مكالمة احترافية بالألمانية بالصيغة الكاملة ديال call center: اسم الشركة، التعريف بالنفس، وعرض المساعدة.',
+        'من بعد هاد المهمة، غتقدر تجاوب على تيليفون بالألمانية بالصيغة الكاملة: اسم الشركة، سميتك، وعرض المساعدة.',
   },
   'emotional_goal': {
     'primary_emotion': 'professional_confidence',
@@ -349,7 +349,7 @@ const Map<String, dynamic> missionZeroData = {
       'order': 1,
       'phase': 'ignite',
       'prompt_text_en': 'Listen to this professional phone greeting. Notice the four parts.',
-      'prompt_text_darija': 'سمع هاد التحية المهنية. لاحظ الأربع أجزاء.',
+      'prompt_text_darija': 'سمع التحية ديال الخدمة. شوف — فيها 4 أجزاء.',
       'target_text_de': 'Guten Tag, TeleService GmbH, mein Name ist Anna Becker, wie kann ich Ihnen helfen?',
       'target_audio_native': 'audio/missions/m01_001_d/ex01_full_greeting_native.opus',
       'evaluation_mode': 'comprehensionCheck',

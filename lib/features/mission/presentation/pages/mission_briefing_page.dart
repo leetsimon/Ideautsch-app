@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/widgets/phoenix_button.dart';
@@ -9,6 +11,7 @@ import '../../domain/entities/mission.dart';
 import '../bloc/mission_bloc.dart';
 import '../bloc/mission_event.dart';
 import '../bloc/mission_state.dart';
+import '../widgets/leave_mission_dialog.dart';
 import '../widgets/yasmina_card.dart';
 import 'mission_player_page.dart';
 import 'mission_summary_page.dart';
@@ -16,8 +19,10 @@ import 'mission_summary_page.dart';
 /// Mission screen — handles the full lifecycle:
 /// Loading → Briefing → Exercise Player → Mission Complete.
 ///
-/// All states are handled within a single BlocProvider scope so
-/// the MissionBloc remains alive throughout the entire mission.
+/// Handles back navigation:
+/// - Briefing: goes straight back to home
+/// - In Progress: shows confirmation dialog
+/// - Escape key on Windows triggers same behavior
 class MissionBriefingPage extends StatelessWidget {
   const MissionBriefingPage({super.key});
 
@@ -33,11 +38,47 @@ class MissionBriefingPage extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             ),
           MissionBriefing() => _BriefingView(state: state),
-          MissionInProgress() => const MissionPlayerPage(),
+          MissionInProgress() => _MissionInProgressWrapper(state: state),
           MissionCompleted() => const MissionSummaryPage(),
           MissionError() => _ErrorView(state: state),
         };
       },
+    );
+  }
+}
+
+/// Wraps MissionPlayerPage with back-navigation handling + Escape key.
+class _MissionInProgressWrapper extends StatelessWidget {
+  const _MissionInProgressWrapper({required this.state});
+
+  final MissionInProgress state;
+
+  Future<void> _handleBack(BuildContext context) async {
+    final shouldLeave = await showLeaveMissionDialog(context);
+    if (shouldLeave && context.mounted) {
+      context.go('/home');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyboardListener(
+      focusNode: FocusNode()..requestFocus(),
+      onKeyEvent: (event) {
+        if (event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.escape) {
+          _handleBack(context);
+        }
+      },
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) async {
+          if (!didPop) {
+            await _handleBack(context);
+          }
+        },
+        child: const MissionPlayerPage(),
+      ),
     );
   }
 }
@@ -83,7 +124,7 @@ class _ErrorView extends StatelessWidget {
               PhoenixButton(
                 label: 'Go Back',
                 icon: Icons.arrow_back_rounded,
-                onPressed: () => Navigator.of(context).maybePop(),
+                onPressed: () => context.go('/home'),
                 variant: PhoenixButtonVariant.outlined,
               ),
             ],
@@ -94,7 +135,7 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-/// The briefing view — shows mission info + Begin button.
+/// The briefing view — shows mission info + Begin button + Back.
 class _BriefingView extends StatelessWidget {
   const _BriefingView({required this.state});
 
@@ -105,27 +146,48 @@ class _BriefingView extends StatelessWidget {
     final mission = state.mission;
 
     return PhoenixScaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: Spacing.lg),
-            _buildHeader(context, mission),
-            const SizedBox(height: Spacing.lg),
-            YasminaCard(
-              message: state.yasminaGreeting,
-              showDismissButton: false,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Back button row
+          Padding(
+            padding: const EdgeInsets.only(top: Spacing.sm),
+            child: IconButton(
+              onPressed: () => context.go('/home'),
+              icon: const Icon(Icons.arrow_back_rounded),
+              tooltip: 'Back to Home',
             ),
-            const SizedBox(height: Spacing.lg),
-            _buildObjective(context, mission),
-            const SizedBox(height: Spacing.md),
-            _buildMeta(context, mission),
-            const SizedBox(height: Spacing.xxl),
-            _buildStartButton(context),
-            const SizedBox(height: Spacing.lg),
-          ],
-        ),
+          ),
+
+          // Scrollable content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Spacing.pagePaddingHorizontal,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(context, mission),
+                  const SizedBox(height: Spacing.lg),
+                  YasminaCard(
+                    message: state.yasminaGreeting,
+                    showDismissButton: false,
+                  ),
+                  const SizedBox(height: Spacing.lg),
+                  _buildObjective(context, mission),
+                  const SizedBox(height: Spacing.md),
+                  _buildMeta(context, mission),
+                  const SizedBox(height: Spacing.xxl),
+                  _buildStartButton(context),
+                  const SizedBox(height: Spacing.xxl),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
+      padding: EdgeInsets.zero,
     );
   }
 
@@ -169,10 +231,7 @@ class _BriefingView extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.md,
-        vertical: Spacing.md,
-      ),
+      padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
         border: Border.all(color: colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(Spacing.cardRadius),
@@ -204,29 +263,18 @@ class _BriefingView extends StatelessWidget {
   Widget _buildMeta(BuildContext context, Mission mission) {
     return Row(
       children: [
-        _MetaChip(
-          icon: Icons.timer_outlined,
-          label: '${mission.estimatedDurationMinutes} min',
-        ),
+        _MetaChip(icon: Icons.timer_outlined, label: '${mission.estimatedDurationMinutes} min'),
         const SizedBox(width: Spacing.sm),
-        _MetaChip(
-          icon: Icons.school_outlined,
-          label: mission.cefrTarget,
-        ),
+        _MetaChip(icon: Icons.school_outlined, label: mission.cefrTarget),
         const SizedBox(width: Spacing.sm),
-        _MetaChip(
-          icon: Icons.mic_outlined,
-          label: '${mission.skills.speaking}%',
-        ),
+        _MetaChip(icon: Icons.mic_outlined, label: '${mission.skills.speaking}%'),
       ],
     );
   }
 
   Widget _buildStartButton(BuildContext context) {
     return PhoenixButton(
-      label: state.resumeExerciseIndex != null
-          ? 'Resume Mission'
-          : 'Begin Mission',
+      label: state.resumeExerciseIndex != null ? 'Resume Mission' : 'Begin Mission',
       icon: Icons.play_arrow_rounded,
       isExpanded: true,
       onPressed: () {
@@ -238,7 +286,6 @@ class _BriefingView extends StatelessWidget {
 
 class _MetaChip extends StatelessWidget {
   const _MetaChip({required this.icon, required this.label});
-
   final IconData icon;
   final String label;
 
@@ -246,12 +293,8 @@ class _MetaChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.sm,
-        vertical: 3,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: Spacing.sm, vertical: 3),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(Spacing.chipRadius),
@@ -261,13 +304,7 @@ class _MetaChip extends StatelessWidget {
         children: [
           Icon(icon, size: 12, color: colorScheme.onSurfaceVariant),
           const SizedBox(width: 3),
-          Text(
-            label,
-            style: textTheme.labelSmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 10,
-            ),
-          ),
+          Text(label, style: textTheme.labelSmall?.copyWith(color: colorScheme.onSurfaceVariant, fontSize: 10)),
         ],
       ),
     );

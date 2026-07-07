@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/widgets/phoenix_button.dart';
@@ -9,6 +10,7 @@ import '../bloc/mission_bloc.dart';
 import '../bloc/mission_event.dart';
 import '../bloc/mission_state.dart';
 import '../widgets/feedback_overlay.dart';
+import '../widgets/leave_mission_dialog.dart';
 import '../widgets/listen_exercise_widget.dart';
 import '../widgets/mission_progress_indicator.dart';
 import '../widgets/speaking_exercise_widget.dart';
@@ -35,10 +37,28 @@ class MissionPlayerPage extends StatelessWidget {
           body: SafeArea(
             child: Column(
               children: [
-                // Progress bar
-                MissionProgressIndicator(
-                  current: state.exerciseIndex,
-                  total: state.totalExercises,
+                // Top bar: back button + progress
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        final shouldLeave =
+                            await showLeaveMissionDialog(context);
+                        if (shouldLeave && context.mounted) {
+                          GoRouter.of(context).go('/home');
+                        }
+                      },
+                      icon: const Icon(Icons.close_rounded),
+                      tooltip: 'Leave mission',
+                    ),
+                    Expanded(
+                      child: MissionProgressIndicator(
+                        current: state.exerciseIndex,
+                        total: state.totalExercises,
+                      ),
+                    ),
+                    const SizedBox(width: 48), // Balance the close button
+                  ],
                 ),
 
                 // Main exercise area

@@ -123,12 +123,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
             isSpeaking: true,
           ),
           const SizedBox(height: Spacing.xxl),
-          Text(
-            'مرحبا بيك',
-            style: textTheme.headlineLarge?.copyWith(
-              fontWeight: FontWeight.w700,
+          Directionality(
+            textDirection: TextDirection.rtl,
+            child: Text(
+              'مرحبا بيك',
+              style: textTheme.headlineLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ).animate().fadeIn(delay: 300.ms, duration: 500.ms),
           const SizedBox(height: Spacing.md),
           Text(
