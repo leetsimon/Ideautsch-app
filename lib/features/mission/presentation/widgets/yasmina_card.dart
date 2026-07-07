@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../core/theme/spacing.dart';
+import '../../../../core/widgets/multilingual_text.dart';
 
 /// Displays a Yasmina coaching message with professional styling.
 ///
+/// Automatically detects Arabic/Darija content and renders RTL.
 /// Appears at mission briefing, mid-mission encouragement, and debrief.
-/// Animated entrance (fade + slide). Dismissible with tap or button.
 class YasminaCard extends StatelessWidget {
   const YasminaCard({
     required this.message,
@@ -15,13 +16,8 @@ class YasminaCard extends StatelessWidget {
     this.showDismissButton = true,
   });
 
-  /// The coaching message text.
   final String message;
-
-  /// Callback when the card is dismissed.
   final VoidCallback? onDismiss;
-
-  /// Whether to show a dismiss/continue button.
   final bool showDismissButton;
 
   @override
@@ -39,7 +35,10 @@ class YasminaCard extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(Spacing.lg),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Spacing.lg,
+          vertical: Spacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -47,37 +46,37 @@ class YasminaCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 16,
+                  radius: 14,
                   backgroundColor: colorScheme.primary,
                   child: const Text(
                     'Y',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
                 ),
                 const SizedBox(width: Spacing.sm),
                 Text(
                   'Yasmina',
-                  style: textTheme.titleSmall?.copyWith(
+                  style: textTheme.labelLarge?.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: Spacing.md),
-            Text(
+            const SizedBox(height: Spacing.sm),
+            MultilingualText(
               message,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
-                height: 1.6,
+                height: 1.5,
               ),
             ),
             if (showDismissButton) ...[
-              const SizedBox(height: Spacing.lg),
+              const SizedBox(height: Spacing.md),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -92,6 +91,6 @@ class YasminaCard extends StatelessWidget {
     )
         .animate()
         .fadeIn(duration: 400.ms, curve: Curves.easeOut)
-        .slideY(begin: 0.1, end: 0, duration: 400.ms, curve: Curves.easeOut);
+        .slideY(begin: 0.08, end: 0, duration: 400.ms, curve: Curves.easeOut);
   }
 }

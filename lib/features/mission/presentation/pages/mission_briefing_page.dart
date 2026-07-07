@@ -11,11 +11,7 @@ import '../bloc/mission_event.dart';
 import '../bloc/mission_state.dart';
 import '../widgets/yasmina_card.dart';
 
-/// Mission briefing screen.
-///
-/// Displays the scenario, Yasmina's greeting, and a
-/// "Begin Mission" button. This is the first screen the
-/// learner sees when they select a mission.
+/// Mission briefing screen — compact layout for Windows desktop.
 class MissionBriefingPage extends StatelessWidget {
   const MissionBriefingPage({super.key});
 
@@ -36,20 +32,20 @@ class MissionBriefingPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: Spacing.xxl),
+                const SizedBox(height: Spacing.lg),
                 _buildHeader(context, mission),
-                const SizedBox(height: Spacing.xxl),
+                const SizedBox(height: Spacing.lg),
                 YasminaCard(
                   message: state.yasminaGreeting,
                   showDismissButton: false,
                 ),
-                const SizedBox(height: Spacing.xxxl),
+                const SizedBox(height: Spacing.lg),
                 _buildObjective(context, mission),
-                const SizedBox(height: Spacing.xxl),
+                const SizedBox(height: Spacing.md),
                 _buildMeta(context, mission),
-                const SizedBox(height: Spacing.huge),
-                _buildStartButton(context, state),
                 const SizedBox(height: Spacing.xxl),
+                _buildStartButton(context, state),
+                const SizedBox(height: Spacing.lg),
               ],
             ),
           ),
@@ -67,26 +63,29 @@ class MissionBriefingPage extends StatelessWidget {
       children: [
         Text(
           'MISSION ${mission.sequence}',
-          style: textTheme.labelLarge?.copyWith(
+          style: textTheme.labelMedium?.copyWith(
             color: colorScheme.primary,
             letterSpacing: 1.2,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: Spacing.xs),
+        const SizedBox(height: 4),
         Text(
           mission.titleEn,
-          style: textTheme.displaySmall,
+          style: textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
         ),
-        const SizedBox(height: Spacing.sm),
+        const SizedBox(height: 2),
         Text(
           mission.titleDe,
-          style: textTheme.headlineMedium?.copyWith(
+          style: textTheme.titleMedium?.copyWith(
             color: colorScheme.onSurfaceVariant,
             fontStyle: FontStyle.italic,
           ),
         ),
       ],
-    ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.05, end: 0);
+    ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.03, end: 0);
   }
 
   Widget _buildObjective(BuildContext context, Mission mission) {
@@ -95,7 +94,10 @@ class MissionBriefingPage extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(Spacing.lg),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Spacing.md,
+        vertical: Spacing.md,
+      ),
       decoration: BoxDecoration(
         border: Border.all(color: colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(Spacing.cardRadius),
@@ -105,16 +107,18 @@ class MissionBriefingPage extends StatelessWidget {
         children: [
           Text(
             'OBJECTIVE',
-            style: textTheme.labelMedium?.copyWith(
+            style: textTheme.labelSmall?.copyWith(
               color: colorScheme.primary,
               letterSpacing: 1,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: Spacing.sm),
+          const SizedBox(height: Spacing.xs),
           Text(
             mission.learningObjectiveEn,
-            style: textTheme.bodyMedium?.copyWith(
-              height: 1.5,
+            style: textTheme.bodySmall?.copyWith(
+              height: 1.4,
+              color: colorScheme.onSurface,
             ),
           ),
         ],
@@ -123,9 +127,6 @@ class MissionBriefingPage extends StatelessWidget {
   }
 
   Widget _buildMeta(BuildContext context, Mission mission) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Row(
       children: [
         _MetaChip(
@@ -140,25 +141,23 @@ class MissionBriefingPage extends StatelessWidget {
         const SizedBox(width: Spacing.sm),
         _MetaChip(
           icon: Icons.mic_outlined,
-          label: '${mission.skills.speaking}% speaking',
+          label: '${mission.skills.speaking}%',
         ),
       ],
     );
   }
 
   Widget _buildStartButton(BuildContext context, MissionBriefing state) {
-    return Center(
-      child: PhoenixButton(
-        label: state.resumeExerciseIndex != null
-            ? 'Resume Mission'
-            : 'Begin Mission',
-        icon: Icons.play_arrow_rounded,
-        isExpanded: true,
-        onPressed: () {
-          context.read<MissionBloc>().add(const StartMissionEvent());
-        },
-      ),
-    ).animate().fadeIn(delay: 600.ms, duration: 400.ms);
+    return PhoenixButton(
+      label: state.resumeExerciseIndex != null
+          ? 'Resume Mission'
+          : 'Begin Mission',
+      icon: Icons.play_arrow_rounded,
+      isExpanded: true,
+      onPressed: () {
+        context.read<MissionBloc>().add(const StartMissionEvent());
+      },
+    ).animate().fadeIn(delay: 500.ms, duration: 400.ms);
   }
 }
 
@@ -175,8 +174,8 @@ class _MetaChip extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.md,
-        vertical: Spacing.xs,
+        horizontal: Spacing.sm,
+        vertical: 3,
       ),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
@@ -185,12 +184,13 @@ class _MetaChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: colorScheme.onSurfaceVariant),
-          const SizedBox(width: Spacing.xs),
+          Icon(icon, size: 12, color: colorScheme.onSurfaceVariant),
+          const SizedBox(width: 3),
           Text(
             label,
             style: textTheme.labelSmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
+              fontSize: 10,
             ),
           ),
         ],
