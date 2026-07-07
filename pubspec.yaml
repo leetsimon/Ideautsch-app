@@ -68,18 +68,27 @@ flutter:
     - assets/audio/ui/
     - assets/databases/
 
-  fonts:
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Inter-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Inter-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Inter-Bold.ttf
-          weight: 700
-    - family: NotoSansArabic
-      fonts:
-        - asset: assets/fonts/NotoSansArabic-Regular.ttf
-          weight: 400
+  # Fonts: Inter and NotoSansArabic are referenced in code via fontFamily strings.
+  # When .ttf files are not bundled, Flutter falls back to the platform default
+  # sans-serif font which provides excellent readability on both Windows and Android.
+  #
+  # To bundle custom fonts, download from Google Fonts and place in assets/fonts/:
+  #   Inter-Regular.ttf, Inter-Medium.ttf, Inter-SemiBold.ttf, Inter-Bold.ttf
+  #   NotoSansArabic-Regular.ttf
+  # Then uncomment the section below:
+  #
+  # fonts:
+  #   - family: Inter
+  #     fonts:
+  #       - asset: assets/fonts/Inter-Regular.ttf
+  #         weight: 400
+  #       - asset: assets/fonts/Inter-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Inter-SemiBold.ttf
+  #         weight: 600
+  #       - asset: assets/fonts/Inter-Bold.ttf
+  #         weight: 700
+  #   - family: NotoSansArabic
+  #     fonts:
+  #       - asset: assets/fonts/NotoSansArabic-Regular.ttf
+  #         weight: 400
