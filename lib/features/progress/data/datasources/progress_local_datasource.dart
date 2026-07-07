@@ -1,3 +1,5 @@
+import 'package:sqflite/sqflite.dart';
+
 import '../../../../core/constants/db_constants.dart';
 import '../../../../core/database/database_provider.dart';
 import '../../../../core/error/exceptions.dart';
@@ -294,7 +296,3 @@ class ProgressLocalDatasource {
     return DateTime.parse(result.first['date'] as String);
   }
 }
-
-/// Required for ConflictAlgorithm usage.
-// ignore: unused_import
-import 'package:sqflite/sqflite.dart';

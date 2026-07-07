@@ -106,7 +106,7 @@ abstract final class AppTheme {
           color: colorScheme.onSurface,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Spacing.cardRadius),
@@ -180,7 +180,6 @@ abstract final class AppTheme {
         linearTrackColor: colorScheme.surfaceContainerHighest,
         color: colorScheme.primary,
         linearMinHeight: 6,
-        borderRadius: BorderRadius.circular(3),
       ),
       dividerTheme: DividerThemeData(
         color: colorScheme.outlineVariant,
