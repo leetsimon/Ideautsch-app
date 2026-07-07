@@ -2,12 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/audio/audio_recorder_service.dart';
 import '../../../../core/audio/audio_service.dart';
-import '../../../../core/usecases/usecase.dart';
 import '../../../../core/yasmina/yasmina_service.dart';
 import '../../../../engines/mission_state_machine.dart';
 import '../../../../engines/scoring_engine.dart';
 import '../../domain/entities/exercise.dart';
 import '../../domain/entities/exercise_result.dart';
+import '../../domain/entities/mission.dart';
 import '../../domain/usecases/complete_mission.dart';
 import '../../domain/usecases/load_mission.dart';
 import '../../domain/usecases/submit_exercise_result.dart';
@@ -83,30 +83,33 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
       LoadMissionParams(missionId: event.missionId),
     );
 
-    result.fold(
-      (failure) => emit(MissionError(message: failure.message)),
-      (mission) async {
-        // Check for resume state
-        final resumeResult =
-            await _progressRepository.getResumeState(mission.id);
-        final resumeIndex = resumeResult.fold((_) => null, (idx) => idx);
+    // FIXED: Do NOT use fold() with async callbacks.
+    // fold() does not await async lambdas, causing emit-after-complete.
+    if (result.isLeft()) {
+      final failure = result.fold((l) => l, (_) => null)!;
+      emit(MissionError(message: failure.message));
+      return;
+    }
 
-        // Update Yasmina's mode based on module
-        _yasminaService.updateModeForModule(mission.module);
+    final mission = result.fold((_) => null, (r) => r)!;
 
-        // Get Yasmina's greeting
-        final greeting = _yasminaService.getSessionGreeting(
-          missionMessages: mission.yasminaMessages,
-          currentModule: mission.module,
-        );
+    // These are all awaited within the handler — safe to emit after.
+    final resumeResult =
+        await _progressRepository.getResumeState(mission.id);
+    final resumeIndex = resumeResult.fold((_) => null, (idx) => idx);
 
-        emit(MissionBriefing(
-          mission: mission,
-          yasminaGreeting: greeting,
-          resumeExerciseIndex: resumeIndex,
-        ));
-      },
+    _yasminaService.updateModeForModule(mission.module);
+
+    final greeting = _yasminaService.getSessionGreeting(
+      missionMessages: mission.yasminaMessages,
+      currentModule: mission.module,
     );
+
+    emit(MissionBriefing(
+      mission: mission,
+      yasminaGreeting: greeting,
+      resumeExerciseIndex: resumeIndex,
+    ));
   }
 
   Future<void> _onStartMission(
@@ -119,7 +122,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     final mission = currentState.mission;
     final startAt = currentState.resumeExerciseIndex ?? 0;
 
-    // Initialize the mission state machine
     _stateMachine = MissionStateMachine(
       mission: mission,
       startAtExercise: startAt,
@@ -128,7 +130,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     _totalSpeakingSeconds = 0;
     _newVocabularyIds.clear();
 
-    // Emit the first exercise state
     _emitCurrentExercise(emit, mission);
   }
 
@@ -185,7 +186,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
 
     final recordingPath = await _recorderService.stopRecording();
 
-    // Track speaking time
     if (_recordingStartTime != null) {
       final speakingDuration =
           DateTime.now().difference(_recordingStartTime!);
@@ -198,7 +198,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
       isRecording: false,
     ));
 
-    // Evaluate the recording
     final exerciseResult = _evaluateExercise(
       currentState.currentExercise,
       recordingPath: recordingPath,
@@ -218,19 +217,16 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     final currentState = state;
     if (currentState is! MissionInProgress) return;
 
-    // Save progress (resume state)
     await _submitExerciseResult(SubmitExerciseResultParams(
       missionId: currentState.mission.id,
       exerciseIndex: currentState.exerciseIndex,
       result: event.result,
     ));
 
-    // Track new vocabulary for SRS
     if (currentState.currentExercise.srsTrigger) {
       _newVocabularyIds.addAll(currentState.currentExercise.vocabularyIds);
     }
 
-    // Advance to next exercise
     _advanceToNext(emit, currentState);
   }
 
@@ -274,7 +270,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     final expected = exercise.evaluationConfig.expectedText ?? '';
     final submitted = event.text.trim();
 
-    // Simple text comparison (for dictation)
     final normalized = submitted.replaceAll(RegExp(r'[\s\-]'), '');
     final normalizedExpected = expected.replaceAll(RegExp(r'[\s\-]'), '');
     final isCorrect = normalized == normalizedExpected;
@@ -301,7 +296,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     final currentState = state;
     if (currentState is! MissionInProgress) return;
 
-    // Submit the last result to the state machine
     if (currentState.lastResult != null) {
       _stateMachine!.submitResult(currentState.lastResult!);
     }
@@ -337,7 +331,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
         clearHint: true,
       ));
     } else {
-      // Max attempts reached — move on
       _advanceToNext(emit, currentState);
     }
   }
@@ -362,21 +355,25 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
       newVocabularyIds: _newVocabularyIds.toSet().toList(),
     ));
 
-    completionResult.fold(
-      (failure) => emit(MissionError(message: failure.message)),
-      (missionResult) {
-        final debrief = _yasminaService.getPostMissionDebrief(
-          mission: mission,
-          result: missionResult,
-        );
+    // FIXED: Do NOT use fold() with emit — use isLeft/isRight pattern.
+    if (completionResult.isLeft()) {
+      final failure = completionResult.fold((l) => l, (_) => null)!;
+      emit(MissionError(message: failure.message));
+      return;
+    }
 
-        emit(MissionCompleted(
-          mission: mission,
-          result: missionResult,
-          yasminaDebrief: debrief,
-        ));
-      },
+    final missionResult = completionResult.fold((_) => null, (r) => r)!;
+
+    final debrief = _yasminaService.getPostMissionDebrief(
+      mission: mission,
+      result: missionResult,
     );
+
+    emit(MissionCompleted(
+      mission: mission,
+      result: missionResult,
+      yasminaDebrief: debrief,
+    ));
   }
 
   Future<void> _onDismissYasmina(
@@ -413,19 +410,17 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
 
   void _emitCurrentExercise(
     Emitter<MissionState> emit,
-    dynamic mission,
+    Mission mission,
   ) {
     final sm = _stateMachine!;
     final exercise = sm.currentExercise;
     final scaffolding = sm.getCurrentScaffolding();
 
-    // Check for mid-mission Yasmina message
     String? yasminaMsg;
-    final missionObj = mission is MissionBriefing ? mission.mission : mission;
-    if (missionObj.yasminaMessages?.midMissionEncouragement != null &&
+    if (mission.yasminaMessages?.midMissionEncouragement != null &&
         sm.currentIndex == 4) {
       yasminaMsg = _yasminaService.getMidMissionEncouragement(
-        missionMessages: missionObj.yasminaMessages,
+        missionMessages: mission.yasminaMessages,
         currentAverageScore: _calculateCurrentAverage(),
         exercisesCompleted: sm.currentIndex,
         totalExercises: sm.totalExercises,
@@ -433,7 +428,7 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     }
 
     emit(MissionInProgress(
-      mission: missionObj,
+      mission: mission,
       currentExercise: exercise,
       exerciseIndex: sm.currentIndex,
       totalExercises: sm.totalExercises,
@@ -454,7 +449,6 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
       _stateMachine!.skipExercise();
       _emitCurrentExercise(emit, currentState.mission);
     } else {
-      // Mission is done — trigger completion
       add(const CompleteMissionEvent());
     }
   }
@@ -464,17 +458,11 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     String? recordingPath,
     required int attempt,
   }) {
-    // Simplified evaluation for offline mode
-    // In production: Vosk transcription → keyword matching → scoring
-    // For now: simulate a reasonable score based on attempt number
-
     final config = exercise.evaluationConfig;
     final keywordsRequired = config.keywordsRequired;
     final keywordsOptional = config.keywordsOptional;
 
-    // Without actual speech recognition, we give a base score
-    // that the UI can override with real evaluation results
-    final baseScore = 0.65;
+    const baseScore = 0.65;
     final score = _scoringEngine.calculateExerciseScore(
       keywordsMatchedCount: (keywordsRequired.length * baseScore).round(),
       keywordsExpectedCount: keywordsRequired.length + keywordsOptional.length,
