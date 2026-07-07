@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'app.dart';
 import 'core/database/database_service.dart';
@@ -13,6 +17,7 @@ import 'injection.dart';
 ///
 /// Phase 1 (IMMEDIATE — before first frame):
 /// - Flutter binding
+/// - SQLite FFI initialization (desktop only)
 /// - System UI configuration
 /// - DI container registration (synchronous, no I/O)
 /// - App widget launched (splash screen appears instantly)
@@ -26,6 +31,11 @@ import 'injection.dart';
 /// of database state, then heavy initialization happens in parallel.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize sqflite FFI for desktop platforms.
+  // On Android/iOS, sqflite uses its own native implementation.
+  // On Windows/Linux/macOS, we must use the FFI-based factory.
+  _initializeDatabaseFactory();
 
   // Phase 1: Immediate (no I/O, no awaits that block first frame)
   await SystemChrome.setPreferredOrientations([
@@ -52,6 +62,18 @@ Future<void> main() async {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     await _initializeServices();
   });
+}
+
+/// Initialize the SQLite database factory for the current platform.
+///
+/// Desktop platforms (Windows, Linux, macOS) require the FFI-based
+/// database factory. Mobile platforms (Android, iOS) use sqflite's
+/// built-in native implementation which is initialized automatically.
+void _initializeDatabaseFactory() {
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
 }
 
 /// Heavy initialization that runs during splash screen display.
