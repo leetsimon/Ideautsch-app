@@ -149,22 +149,22 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     final currentState = state;
     if (currentState is! MissionInProgress) return;
 
-    emit(currentState.copyWith(phase: ExercisePlayPhase.playingAudio));
-
     final audioPath = event.audioPath ??
         currentState.currentExercise.targetAudioNative;
 
-    if (audioPath != null) {
-      try {
-        await _audioService.playAsset(audioPath, speed: event.speed);
-        await _audioService.waitForCompletion();
-      } catch (_) {
-        // Audio asset not available — skip silently.
-        // This is expected during development when placeholder files exist.
-      }
+    if (audioPath == null || audioPath.contains('placeholder')) {
+      // No audio available — stay in presenting phase, don't change state
+      return;
     }
 
-    // Only emit if still in the same state (not disposed/changed)
+    emit(currentState.copyWith(phase: ExercisePlayPhase.playingAudio));
+
+    final success = await _audioService.playAsset(audioPath, speed: event.speed);
+
+    if (success) {
+      await _audioService.waitForCompletion();
+    }
+
     if (!emit.isDone) {
       emit(currentState.copyWith(phase: ExercisePlayPhase.presenting));
     }

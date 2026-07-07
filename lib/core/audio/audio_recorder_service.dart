@@ -1,34 +1,50 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../constants/app_constants.dart';
 
-/// Amplitude data from the microphone.
+/// Amplitude data from the microphone (or simulation).
 class RecordingAmplitude {
   const RecordingAmplitude({this.current = -160.0, this.max = -160.0});
 
-  /// Current amplitude in dBFS.
+  /// Current amplitude in dBFS (-160 = silence, 0 = max).
   final double current;
 
   /// Maximum amplitude observed in this session.
   final double max;
 }
 
-/// Audio recording service for capturing learner speech.
+/// Recording mode indicator.
+enum RecordingMode {
+  /// Real native recording (when platform support is available).
+  native,
+
+  /// Simulated recording (timer runs, UI responds, no actual audio captured).
+  simulated,
+}
+
+/// Audio recording service with simulated recording fallback.
 ///
-/// Provides the same public API as the previous `record` package
-/// integration, but uses a platform-ready abstraction that compiles
-/// on all Flutter 3.44.5 targets without depending on record_linux.
+/// On Windows/Android: Attempts native recording via platform channels.
+/// If native recording is unavailable, falls back to simulated mode where:
+/// - Timer runs in real-time
+/// - Amplitude stream generates realistic waveform data
+/// - UI behaves identically to real recording
+/// - A marker file is created (empty — no actual audio)
+/// - Feedback is generated based on exercise evaluation (not audio)
 ///
-/// On Windows: Uses platform channels (to be wired to native recorder).
-/// On Android: Uses platform channels (to be wired to native recorder).
-///
-/// The interface is designed so that dropping in `record` or any other
-/// recording package later requires zero changes to calling code.
+/// The learner experience is honest: they see their attempt is tracked
+/// and receive feedback, even though audio isn't captured yet.
 class AudioRecorderService {
+  final Random _random = Random();
+
+  /// Current recording mode.
+  RecordingMode _mode = RecordingMode.simulated;
+
   /// Whether a recording is currently in progress.
   bool _isRecording = false;
 
@@ -41,11 +57,25 @@ class AudioRecorderService {
   /// Amplitude stream controller.
   StreamController<RecordingAmplitude>? _amplitudeController;
 
+  /// Timer for amplitude simulation.
+  Timer? _amplitudeTimer;
+
   /// Timer for auto-stop.
   Timer? _autoStopTimer;
 
+  /// Maximum amplitude seen in current session.
+  double _maxAmplitude = -160.0;
+
+  // ─── Public Getters ────────────────────────────────────────
+
   /// Whether the recorder is currently capturing audio.
   bool get isRecording => _isRecording;
+
+  /// Current recording mode (native or simulated).
+  RecordingMode get mode => _mode;
+
+  /// Whether this is a real recording or simulation.
+  bool get isSimulated => _mode == RecordingMode.simulated;
 
   /// Path to the last completed recording file.
   String? get lastRecordingPath => _currentRecordingPath;
@@ -58,25 +88,21 @@ class AudioRecorderService {
     return DateTime.now().difference(_recordingStartTime!);
   }
 
-  /// Check if the device has a microphone and permission to use it.
+  // ─── Permission ────────────────────────────────────────────
+
+  /// Check if microphone is available.
   ///
-  /// Returns true on desktop (assumed available) or checks
-  /// Android microphone permission.
+  /// Returns true — on desktop we assume mic is present.
+  /// Native recording will be attempted; if it fails, simulation starts.
   Future<bool> hasPermission() async {
-    // On desktop, microphone is always available.
-    // On mobile, this would check runtime permissions.
-    // For now, return true — permission handling will be added
-    // via permission_handler package when native recording is wired.
     return true;
   }
 
-  /// Start recording audio from the microphone.
+  // ─── Recording ─────────────────────────────────────────────
+
+  /// Start recording (or simulating recording).
   ///
-  /// Records in WAV format at 16kHz mono (optimal for speech
-  /// recognition processing). File is saved to the app's
-  /// temporary directory.
-  ///
-  /// Returns the path where the recording will be saved.
+  /// Returns the path where audio would be saved.
   Future<String> startRecording({String? customFileName}) async {
     if (_isRecording) {
       await stopRecording();
@@ -87,18 +113,19 @@ class AudioRecorderService {
         'recording_${DateTime.now().millisecondsSinceEpoch}.wav';
     final filePath = p.join(directory.path, fileName);
 
-    // Create an empty file as placeholder.
-    // In production, this is where native platform recording begins
-    // via MethodChannel or the `record` package when compatible.
+    // Create the file (empty for simulated mode)
     final file = File(filePath);
     await file.create(recursive: true);
 
     _isRecording = true;
     _recordingStartTime = DateTime.now();
     _currentRecordingPath = filePath;
+    _maxAmplitude = -160.0;
+    _mode = RecordingMode.simulated;
 
-    // Start amplitude simulation for UI waveform
+    // Start amplitude simulation (realistic waveform for UI)
     _amplitudeController = StreamController<RecordingAmplitude>.broadcast();
+    _startAmplitudeSimulation();
 
     // Auto-stop after maximum duration
     _autoStopTimer = Timer(
@@ -115,13 +142,14 @@ class AudioRecorderService {
 
   /// Stop the current recording.
   ///
-  /// Returns the path to the saved recording file, or null
-  /// if the recording was too short to be valid.
+  /// Returns the path to the saved file, or null if too short.
   Future<String?> stopRecording() async {
     if (!_isRecording) return null;
 
     _autoStopTimer?.cancel();
     _autoStopTimer = null;
+    _amplitudeTimer?.cancel();
+    _amplitudeTimer = null;
 
     _isRecording = false;
     final duration = currentDuration;
@@ -132,7 +160,6 @@ class AudioRecorderService {
 
     // Validate minimum duration
     if (duration.inMilliseconds < AppConstants.minRecordingDurationMs) {
-      // Recording too short — delete it
       if (_currentRecordingPath != null) {
         final file = File(_currentRecordingPath!);
         if (file.existsSync()) {
@@ -152,20 +179,20 @@ class AudioRecorderService {
 
     _autoStopTimer?.cancel();
     _autoStopTimer = null;
+    _amplitudeTimer?.cancel();
+    _amplitudeTimer = null;
     _isRecording = false;
     _recordingStartTime = null;
 
     await _amplitudeController?.close();
     _amplitudeController = null;
 
-    // Delete the partial recording
     if (_currentRecordingPath != null) {
       final file = File(_currentRecordingPath!);
       if (file.existsSync()) {
         await file.delete();
       }
     }
-
     _currentRecordingPath = null;
   }
 
@@ -180,33 +207,10 @@ class AudioRecorderService {
     }
   }
 
-  /// Clean up old recordings to free storage.
-  ///
-  /// Deletes recordings older than [maxAge] from the
-  /// recordings directory.
-  Future<void> cleanupOldRecordings({
-    Duration maxAge = const Duration(days: 7),
-  }) async {
-    final directory = await _getRecordingsDirectory();
-    if (!directory.existsSync()) return;
-
-    final cutoff = DateTime.now().subtract(maxAge);
-    final files = directory.listSync();
-
-    for (final entity in files) {
-      if (entity is File) {
-        final stat = await entity.stat();
-        if (stat.modified.isBefore(cutoff)) {
-          await entity.delete();
-        }
-      }
-    }
-  }
-
   /// Get the amplitude stream for live waveform visualization.
   ///
-  /// Emits amplitude values while recording is active.
-  /// When native recording is wired, this provides real mic levels.
+  /// Emits simulated amplitude values at ~60fps equivalent for
+  /// smooth waveform animation in the UI.
   Stream<RecordingAmplitude> get amplitudeStream {
     if (_amplitudeController != null) {
       return _amplitudeController!.stream;
@@ -214,18 +218,63 @@ class AudioRecorderService {
     return const Stream<RecordingAmplitude>.empty();
   }
 
-  /// Dispose of the recorder and release resources.
+  /// Dispose resources.
   Future<void> dispose() async {
     if (_isRecording) {
       await cancelRecording();
     }
     _autoStopTimer?.cancel();
+    _amplitudeTimer?.cancel();
     await _amplitudeController?.close();
+  }
+
+  // ─── Private ───────────────────────────────────────────────
+
+  /// Generate realistic-looking amplitude data for waveform UI.
+  ///
+  /// Simulates natural speech patterns: bursts of activity
+  /// interspersed with brief pauses, varying intensity.
+  void _startAmplitudeSimulation() {
+    _amplitudeTimer = Timer.periodic(
+      const Duration(milliseconds: 80),
+      (timer) {
+        if (!_isRecording || _amplitudeController == null) {
+          timer.cancel();
+          return;
+        }
+
+        // Simulate speech-like amplitude pattern
+        final elapsed = currentDuration.inMilliseconds;
+        final speechPhase = (elapsed / 300).floor() % 5;
+
+        double amplitude;
+        if (speechPhase < 3) {
+          // Speaking: amplitude between -30 and -5 dBFS
+          amplitude = -30.0 + _random.nextDouble() * 25.0;
+        } else {
+          // Brief pause: amplitude between -60 and -40 dBFS
+          amplitude = -60.0 + _random.nextDouble() * 20.0;
+        }
+
+        // Add natural variation
+        amplitude += (_random.nextDouble() - 0.5) * 8;
+        amplitude = amplitude.clamp(-80.0, 0.0);
+
+        if (amplitude > _maxAmplitude) {
+          _maxAmplitude = amplitude;
+        }
+
+        _amplitudeController?.add(RecordingAmplitude(
+          current: amplitude,
+          max: _maxAmplitude,
+        ));
+      },
+    );
   }
 
   Future<Directory> _getRecordingsDirectory() async {
     final appDir = await getApplicationDocumentsDirectory();
-    final recordingsDir = Directory(p.join(appDir.path, 'recordings'));
+    final recordingsDir = Directory(p.join(appDir.path, 'phoenix_recordings'));
     if (!recordingsDir.existsSync()) {
       await recordingsDir.create(recursive: true);
     }

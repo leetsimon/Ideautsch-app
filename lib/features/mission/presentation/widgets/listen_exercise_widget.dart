@@ -71,8 +71,7 @@ class ListenExerciseWidget extends StatelessWidget {
             ),
           const SizedBox(height: Spacing.xxl),
 
-          // Play audio button — only show if we have audio assets
-          // (during development, audio files may not yet exist)
+          // Play audio button — shows status based on availability
           if (exercise.targetAudioNative != null &&
               !exercise.targetAudioNative!.contains('placeholder'))
             Center(
@@ -93,6 +92,36 @@ class ListenExerciseWidget extends StatelessWidget {
                             );
                       },
                 variant: PhoenixButtonVariant.filled,
+              ),
+            )
+          else
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Spacing.lg,
+                  vertical: Spacing.md,
+                ),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(Spacing.chipRadius),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.volume_off_rounded,
+                      size: 16,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: Spacing.sm),
+                    Text(
+                      'Audio coming soon',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 

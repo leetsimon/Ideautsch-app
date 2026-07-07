@@ -1,15 +1,13 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 
 /// Audio playback service for the application.
 ///
-/// Manages playback of:
-/// - Native-speed vocabulary and dialogue audio
-/// - Slow-speed learning audio
-/// - Shadow-speed audio (90% for shadowing exercises)
-/// - UI sounds (session start, exercise complete)
-///
-/// Supports variable playback speed and preloading
-/// for zero-latency exercise transitions.
+/// Manages playback of vocabulary, dialogue, and UI audio.
+/// Gracefully handles missing assets by reporting availability
+/// rather than throwing silent exceptions.
 class AudioService {
   AudioService() : _player = AudioPlayer();
 
@@ -30,75 +28,102 @@ class AudioService {
   /// Stream of playback position updates.
   Stream<Duration> get positionStream => _player.positionStream;
 
+  /// Whether the last playback attempt succeeded.
+  bool _lastPlaybackSucceeded = false;
+
+  /// Whether the last asset existed and was playable.
+  bool get lastPlaybackSucceeded => _lastPlaybackSucceeded;
+
+  /// Check if an audio asset exists in the bundle.
+  ///
+  /// Returns true only for actual audio files (not placeholders).
+  Future<bool> isAssetAvailable(String assetPath) async {
+    try {
+      // Try to load the asset data — if it fails, asset doesn't exist
+      final fullPath = 'assets/$assetPath';
+      await rootBundle.load(fullPath);
+      // Check it's not our placeholder.json
+      if (assetPath.endsWith('.json')) return false;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Play an audio asset from the app bundle.
   ///
-  /// [assetPath] is relative to the assets directory
-  /// (e.g., "audio/missions/m01_001_d/vocab_guten_tag_native.opus").
-  ///
-  /// [speed] controls playback rate (1.0 = normal, 0.75 = slow).
-  Future<void> playAsset(String assetPath, {double speed = 1.0}) async {
-    await _player.setSpeed(speed);
-    await _player.setAsset('assets/$assetPath');
-    await _player.play();
+  /// Returns true if playback started successfully, false if
+  /// the asset is unavailable. Never throws.
+  Future<bool> playAsset(String assetPath, {double speed = 1.0}) async {
+    try {
+      await _player.setSpeed(speed);
+      await _player.setAsset('assets/$assetPath');
+      await _player.play();
+      _lastPlaybackSucceeded = true;
+      return true;
+    } catch (_) {
+      _lastPlaybackSucceeded = false;
+      return false;
+    }
   }
 
   /// Play an audio file from the device file system.
   ///
-  /// Used for playing back learner recordings.
-  Future<void> playFile(String filePath, {double speed = 1.0}) async {
-    await _player.setSpeed(speed);
-    await _player.setFilePath(filePath);
-    await _player.play();
-  }
-
-  /// Preload an asset without playing it.
-  ///
-  /// Used to eliminate latency before exercises that need
-  /// immediate audio response (shadow, listen exercises).
-  Future<Duration?> preloadAsset(String assetPath) async {
-    return _player.setAsset('assets/$assetPath');
-  }
-
-  /// Pause playback (can be resumed).
-  Future<void> pause() async {
-    await _player.pause();
-  }
-
-  /// Resume playback after pause.
-  Future<void> resume() async {
-    await _player.play();
-  }
-
-  /// Stop playback and reset position.
-  Future<void> stop() async {
-    await _player.stop();
-  }
-
-  /// Seek to a specific position in the audio.
-  Future<void> seekTo(Duration position) async {
-    await _player.seek(position);
-  }
-
-  /// Set playback speed without starting playback.
-  Future<void> setSpeed(double speed) async {
-    await _player.setSpeed(speed);
+  /// Returns true if playback started, false on failure.
+  Future<bool> playFile(String filePath, {double speed = 1.0}) async {
+    try {
+      await _player.setSpeed(speed);
+      await _player.setFilePath(filePath);
+      await _player.play();
+      _lastPlaybackSucceeded = true;
+      return true;
+    } catch (_) {
+      _lastPlaybackSucceeded = false;
+      return false;
+    }
   }
 
   /// Wait for the current audio to finish playing.
   ///
-  /// Returns when playback completes naturally (not stopped).
-  /// Useful for sequential audio playback in exercises.
+  /// Returns immediately if nothing is playing or if playback failed.
   Future<void> waitForCompletion() async {
-    await _player.playerStateStream.firstWhere(
-      (state) => state.processingState == ProcessingState.completed,
-    );
+    if (!_lastPlaybackSucceeded) return;
+    try {
+      await _player.playerStateStream
+          .firstWhere(
+            (state) => state.processingState == ProcessingState.completed,
+          )
+          .timeout(const Duration(seconds: 30));
+    } catch (_) {
+      // Timeout or stream error — just continue
+    }
+  }
+
+  /// Pause playback (can be resumed).
+  Future<void> pause() async {
+    try {
+      await _player.pause();
+    } catch (_) {}
+  }
+
+  /// Resume playback after pause.
+  Future<void> resume() async {
+    try {
+      await _player.play();
+    } catch (_) {}
+  }
+
+  /// Stop playback and reset position.
+  Future<void> stop() async {
+    try {
+      await _player.stop();
+    } catch (_) {}
   }
 
   /// Dispose of the audio player and release resources.
-  ///
-  /// Call this when the service is no longer needed
-  /// (app shutdown or service replacement).
   Future<void> dispose() async {
-    await _player.dispose();
+    try {
+      await _player.dispose();
+    } catch (_) {}
   }
 }

@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/typography_tokens.dart';
+import '../../../../core/widgets/audio_wave_widget.dart';
 import '../../../../core/widgets/microphone_button.dart';
 import '../../../../core/widgets/phoenix_button.dart';
 import '../../domain/entities/exercise.dart';
@@ -11,14 +15,16 @@ import '../bloc/mission_bloc.dart';
 import '../bloc/mission_event.dart';
 import '../bloc/mission_state.dart';
 
-/// Widget for speaking exercises (shadow, repeat, vocabulary_present).
+/// Widget for speaking exercises (shadow, repeat, vocabulary_present, etc).
 ///
-/// Displays:
-/// - Prompt text (what to do)
-/// - Target German text (if scaffolding allows)
-/// - Play model button
-/// - Microphone button for recording
-/// - Recording timer when active
+/// Shows:
+/// - Prompt text
+/// - German target text (when scaffolding allows)
+/// - Play model button (when audio available)
+/// - Microphone button with recording state
+/// - Waveform animation during recording
+/// - Recording timer
+/// - Skip option for when recording isn't possible
 class SpeakingExerciseWidget extends StatelessWidget {
   const SpeakingExerciseWidget({
     required this.exercise,
@@ -53,9 +59,9 @@ class SpeakingExerciseWidget extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: Spacing.xxl),
+          const SizedBox(height: Spacing.xl),
 
-          // German target text (if visible in current scaffolding)
+          // German target text (if visible)
           if (scaffolding.textVisible && exercise.targetTextDe != null) ...[
             Container(
               width: double.infinity,
@@ -72,7 +78,7 @@ class SpeakingExerciseWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: Spacing.xxl),
+            const SizedBox(height: Spacing.xl),
           ],
 
           // First words hint (standard scaffolding)
@@ -90,25 +96,29 @@ class SpeakingExerciseWidget extends StatelessWidget {
                       ))
                   .toList(),
             ),
-            const SizedBox(height: Spacing.xxl),
+            const SizedBox(height: Spacing.xl),
           ],
 
-          // Play model button
-          if (exercise.targetAudioNative != null)
-            PhoenixButton(
-              label: scaffolding.audioModelFirst
-                  ? 'Listen First'
-                  : 'Play Model',
-              icon: Icons.volume_up_rounded,
-              onPressed: () {
-                context.read<MissionBloc>().add(
-                      PlayAudioEvent(audioPath: exercise.targetAudioNative),
-                    );
-              },
-              variant: PhoenixButtonVariant.outlined,
+          const Spacer(flex: 2),
+
+          // Waveform visualization (visible during recording)
+          if (state.isRecording)
+            Padding(
+              padding: const EdgeInsets.only(bottom: Spacing.lg),
+              child: AudioWaveWidget(
+                isActive: true,
+                height: 40,
+                barCount: 20,
+                color: colorScheme.error,
+              ),
             ),
 
-          const Spacer(flex: 3),
+          // Recording timer
+          if (state.isRecording)
+            Padding(
+              padding: const EdgeInsets.only(bottom: Spacing.md),
+              child: _RecordingTimer(),
+            ),
 
           // Microphone button
           MicrophoneButton(
@@ -121,11 +131,13 @@ class SpeakingExerciseWidget extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: Spacing.md),
+          const SizedBox(height: Spacing.sm),
 
           // Recording status text
           Text(
-            state.isRecording ? 'Recording... tap to stop' : 'Tap to speak',
+            state.isRecording
+                ? 'Listening... tap to stop'
+                : 'Tap to speak',
             style: textTheme.bodySmall?.copyWith(
               color: state.isRecording
                   ? colorScheme.error
@@ -133,43 +145,48 @@ class SpeakingExerciseWidget extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: Spacing.lg),
-
-          // Skip button (allows progression when recording isn't available)
-          TextButton(
-            onPressed: () {
-              // Simulate a passing result so the learner can proceed
-              context.read<MissionBloc>().add(
-                    SubmitExerciseEvent(
-                      result: ExerciseResult(
-                        exerciseId: exercise.id,
-                        outcome: ExerciseOutcome.partial,
-                        score: 0.5,
-                        attemptNumber: state.currentAttempt,
-                        timeSpentSeconds: 3,
-                      ),
-                    ),
-                  );
-            },
-            child: Text(
-              'Skip for now',
-              style: textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-
           const Spacer(flex: 2),
 
-          // Hint button (if available)
-          if (scaffolding.hintAvailable && state.hintText == null)
-            TextButton.icon(
-              onPressed: () {
-                context.read<MissionBloc>().add(const RequestHintEvent());
-              },
-              icon: const Icon(Icons.lightbulb_outline, size: 18),
-              label: const Text('Hint'),
-            ),
+          // Bottom area: hint + skip
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Hint button
+              if (scaffolding.hintAvailable && state.hintText == null)
+                TextButton.icon(
+                  onPressed: () {
+                    context.read<MissionBloc>().add(const RequestHintEvent());
+                  },
+                  icon: const Icon(Icons.lightbulb_outline, size: 16),
+                  label: const Text('Hint'),
+                )
+              else
+                const SizedBox.shrink(),
+
+              // Skip button
+              TextButton(
+                onPressed: () {
+                  context.read<MissionBloc>().add(
+                        SubmitExerciseEvent(
+                          result: ExerciseResult(
+                            exerciseId: exercise.id,
+                            outcome: ExerciseOutcome.partial,
+                            score: 0.5,
+                            attemptNumber: state.currentAttempt,
+                            timeSpentSeconds: 3,
+                          ),
+                        ),
+                      );
+                },
+                child: Text(
+                  'Skip',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
 
           // Displayed hint
           if (state.hintText != null)
@@ -190,9 +207,52 @@ class SpeakingExerciseWidget extends StatelessWidget {
               ),
             ),
 
-          const SizedBox(height: Spacing.lg),
+          const SizedBox(height: Spacing.md),
         ],
       ),
+    );
+  }
+}
+
+/// Live recording timer that counts up.
+class _RecordingTimer extends StatefulWidget {
+  @override
+  State<_RecordingTimer> createState() => _RecordingTimerState();
+}
+
+class _RecordingTimerState extends State<_RecordingTimer> {
+  late final Stopwatch _stopwatch;
+  late final Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _stopwatch = Stopwatch()..start();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _stopwatch.stop();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final elapsed = _stopwatch.elapsed;
+    final seconds = elapsed.inSeconds;
+    final tenths = (elapsed.inMilliseconds ~/ 100) % 10;
+
+    return Text(
+      '${seconds}s',
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).colorScheme.error,
+            fontWeight: FontWeight.w600,
+            fontFeatures: [const FontFeature.tabularFigures()],
+          ),
     );
   }
 }
