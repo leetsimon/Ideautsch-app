@@ -6,6 +6,7 @@ import '../../../../core/theme/typography_tokens.dart';
 import '../../../../core/widgets/microphone_button.dart';
 import '../../../../core/widgets/phoenix_button.dart';
 import '../../domain/entities/exercise.dart';
+import '../../domain/entities/exercise_result.dart';
 import '../bloc/mission_bloc.dart';
 import '../bloc/mission_event.dart';
 import '../bloc/mission_state.dart';
@@ -129,6 +130,32 @@ class SpeakingExerciseWidget extends StatelessWidget {
               color: state.isRecording
                   ? colorScheme.error
                   : colorScheme.onSurfaceVariant,
+            ),
+          ),
+
+          const SizedBox(height: Spacing.lg),
+
+          // Skip button (allows progression when recording isn't available)
+          TextButton(
+            onPressed: () {
+              // Simulate a passing result so the learner can proceed
+              context.read<MissionBloc>().add(
+                    SubmitExerciseEvent(
+                      result: ExerciseResult(
+                        exerciseId: exercise.id,
+                        outcome: ExerciseOutcome.partial,
+                        score: 0.5,
+                        attemptNumber: state.currentAttempt,
+                        timeSpentSeconds: 3,
+                      ),
+                    ),
+                  );
+            },
+            child: Text(
+              'Skip for now',
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
 

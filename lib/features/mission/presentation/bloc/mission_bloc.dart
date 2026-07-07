@@ -234,17 +234,25 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     final currentState = state;
     if (currentState is! MissionInProgress) return;
 
+    // Save to persistence (resume state)
     await _submitExerciseResult(SubmitExerciseResultParams(
       missionId: currentState.mission.id,
       exerciseIndex: currentState.exerciseIndex,
       result: event.result,
     ));
 
+    // Track new vocabulary for SRS
     if (currentState.currentExercise.srsTrigger) {
       _newVocabularyIds.addAll(currentState.currentExercise.vocabularyIds);
     }
 
-    _advanceToNext(emit, currentState);
+    // Record in state machine (for adaptive difficulty) and advance
+    final hasMore = _stateMachine!.submitResult(event.result);
+    if (hasMore) {
+      _emitCurrentExercise(emit, currentState.mission);
+    } else {
+      add(const CompleteMissionEvent());
+    }
   }
 
   Future<void> _onSelectAnswer(
@@ -313,11 +321,19 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     final currentState = state;
     if (currentState is! MissionInProgress) return;
 
+    // Record the result in the state machine (this also advances the index)
     if (currentState.lastResult != null) {
-      _stateMachine!.submitResult(currentState.lastResult!);
+      final hasMore = _stateMachine!.submitResult(currentState.lastResult!);
+      if (hasMore) {
+        _emitCurrentExercise(emit, currentState.mission);
+      } else {
+        // No more exercises — complete the mission
+        add(const CompleteMissionEvent());
+      }
+    } else {
+      // No result to record — just advance (skip scenario)
+      _advanceToNext(emit, currentState);
     }
-
-    _advanceToNext(emit, currentState);
   }
 
   Future<void> _onRequestHint(

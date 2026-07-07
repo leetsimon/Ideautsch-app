@@ -71,27 +71,30 @@ class ListenExerciseWidget extends StatelessWidget {
             ),
           const SizedBox(height: Spacing.xxl),
 
-          // Play audio button
-          Center(
-            child: PhoenixButton(
-              label: state.phase == ExercisePlayPhase.playingAudio
-                  ? 'Playing...'
-                  : 'Play Audio',
-              icon: state.phase == ExercisePlayPhase.playingAudio
-                  ? Icons.pause_rounded
-                  : Icons.play_arrow_rounded,
-              onPressed: state.phase == ExercisePlayPhase.playingAudio
-                  ? null
-                  : () {
-                      context.read<MissionBloc>().add(
-                            PlayAudioEvent(
-                              audioPath: exercise.targetAudioNative,
-                            ),
-                          );
-                    },
-              variant: PhoenixButtonVariant.filled,
+          // Play audio button — only show if we have audio assets
+          // (during development, audio files may not yet exist)
+          if (exercise.targetAudioNative != null &&
+              !exercise.targetAudioNative!.contains('placeholder'))
+            Center(
+              child: PhoenixButton(
+                label: state.phase == ExercisePlayPhase.playingAudio
+                    ? 'Playing...'
+                    : 'Play Audio',
+                icon: state.phase == ExercisePlayPhase.playingAudio
+                    ? Icons.pause_rounded
+                    : Icons.play_arrow_rounded,
+                onPressed: state.phase == ExercisePlayPhase.playingAudio
+                    ? null
+                    : () {
+                        context.read<MissionBloc>().add(
+                              PlayAudioEvent(
+                                audioPath: exercise.targetAudioNative,
+                              ),
+                            );
+                      },
+                variant: PhoenixButtonVariant.filled,
+              ),
             ),
-          ),
 
           const SizedBox(height: Spacing.xxxl),
 
