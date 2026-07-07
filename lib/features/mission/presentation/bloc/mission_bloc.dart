@@ -120,6 +120,15 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     if (currentState is! MissionBriefing) return;
 
     final mission = currentState.mission;
+
+    // Guard: mission must have exercises to play
+    if (mission.exercises.isEmpty) {
+      emit(const MissionError(
+        message: 'Mission has no exercises. Content may not be loaded correctly.',
+      ));
+      return;
+    }
+
     final startAt = currentState.resumeExerciseIndex ?? 0;
 
     _stateMachine = MissionStateMachine(
@@ -146,11 +155,19 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
         currentState.currentExercise.targetAudioNative;
 
     if (audioPath != null) {
-      await _audioService.playAsset(audioPath, speed: event.speed);
-      await _audioService.waitForCompletion();
+      try {
+        await _audioService.playAsset(audioPath, speed: event.speed);
+        await _audioService.waitForCompletion();
+      } catch (_) {
+        // Audio asset not available — skip silently.
+        // This is expected during development when placeholder files exist.
+      }
     }
 
-    emit(currentState.copyWith(phase: ExercisePlayPhase.presenting));
+    // Only emit if still in the same state (not disposed/changed)
+    if (!emit.isDone) {
+      emit(currentState.copyWith(phase: ExercisePlayPhase.presenting));
+    }
   }
 
   Future<void> _onStartRecording(

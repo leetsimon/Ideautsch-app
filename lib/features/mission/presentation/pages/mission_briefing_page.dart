@@ -10,8 +10,14 @@ import '../bloc/mission_bloc.dart';
 import '../bloc/mission_event.dart';
 import '../bloc/mission_state.dart';
 import '../widgets/yasmina_card.dart';
+import 'mission_player_page.dart';
+import 'mission_summary_page.dart';
 
-/// Mission briefing screen — compact layout for Windows desktop.
+/// Mission screen — handles the full lifecycle:
+/// Loading → Briefing → Exercise Player → Mission Complete.
+///
+/// All states are handled within a single BlocProvider scope so
+/// the MissionBloc remains alive throughout the entire mission.
 class MissionBriefingPage extends StatelessWidget {
   const MissionBriefingPage({super.key});
 
@@ -19,38 +25,107 @@ class MissionBriefingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MissionBloc, MissionState>(
       builder: (context, state) {
-        if (state is! MissionBriefing) {
-          return const PhoenixScaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        final mission = state.mission;
-
-        return PhoenixScaffold(
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: Spacing.lg),
-                _buildHeader(context, mission),
-                const SizedBox(height: Spacing.lg),
-                YasminaCard(
-                  message: state.yasminaGreeting,
-                  showDismissButton: false,
-                ),
-                const SizedBox(height: Spacing.lg),
-                _buildObjective(context, mission),
-                const SizedBox(height: Spacing.md),
-                _buildMeta(context, mission),
-                const SizedBox(height: Spacing.xxl),
-                _buildStartButton(context, state),
-                const SizedBox(height: Spacing.lg),
-              ],
+        return switch (state) {
+          MissionInitial() => const PhoenixScaffold(
+              body: Center(child: CircularProgressIndicator()),
             ),
-          ),
-        );
+          MissionLoading() => const PhoenixScaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
+          MissionBriefing() => _BriefingView(state: state),
+          MissionInProgress() => const MissionPlayerPage(),
+          MissionCompleted() => const MissionSummaryPage(),
+          MissionError() => _ErrorView(state: state),
+        };
       },
+    );
+  }
+}
+
+/// Error fallback with retry option.
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.state});
+
+  final MissionError state;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return PhoenixScaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(Spacing.xxl),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                size: 48,
+                color: colorScheme.error.withOpacity(0.7),
+              ),
+              const SizedBox(height: Spacing.lg),
+              Text(
+                'Could not load mission',
+                style: textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: Spacing.sm),
+              Text(
+                state.message,
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: Spacing.xxl),
+              PhoenixButton(
+                label: 'Go Back',
+                icon: Icons.arrow_back_rounded,
+                onPressed: () => Navigator.of(context).maybePop(),
+                variant: PhoenixButtonVariant.outlined,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The briefing view — shows mission info + Begin button.
+class _BriefingView extends StatelessWidget {
+  const _BriefingView({required this.state});
+
+  final MissionBriefing state;
+
+  @override
+  Widget build(BuildContext context) {
+    final mission = state.mission;
+
+    return PhoenixScaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: Spacing.lg),
+            _buildHeader(context, mission),
+            const SizedBox(height: Spacing.lg),
+            YasminaCard(
+              message: state.yasminaGreeting,
+              showDismissButton: false,
+            ),
+            const SizedBox(height: Spacing.lg),
+            _buildObjective(context, mission),
+            const SizedBox(height: Spacing.md),
+            _buildMeta(context, mission),
+            const SizedBox(height: Spacing.xxl),
+            _buildStartButton(context),
+            const SizedBox(height: Spacing.lg),
+          ],
+        ),
+      ),
     );
   }
 
@@ -147,7 +222,7 @@ class MissionBriefingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStartButton(BuildContext context, MissionBriefing state) {
+  Widget _buildStartButton(BuildContext context) {
     return PhoenixButton(
       label: state.resumeExerciseIndex != null
           ? 'Resume Mission'

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/theme/spacing.dart';
+import '../../../../core/widgets/phoenix_button.dart';
 import '../../domain/entities/exercise.dart';
 import '../../domain/entities/exercise_result.dart';
 import '../bloc/mission_bloc.dart';
@@ -14,19 +16,19 @@ import '../widgets/yasmina_card.dart';
 
 /// Main mission player page — orchestrates exercise display.
 ///
-/// Routes to the correct exercise widget based on the current
-/// exercise type and manages the feedback overlay.
+/// Renders the current exercise based on MissionInProgress state.
+/// Handles all exercise types with graceful fallbacks for missing
+/// audio assets or unavailable microphone.
 class MissionPlayerPage extends StatelessWidget {
   const MissionPlayerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MissionBloc, MissionState>(
+      buildWhen: (previous, current) => current is MissionInProgress,
       builder: (context, state) {
         if (state is! MissionInProgress) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const SizedBox.shrink();
         }
 
         return Scaffold(
@@ -62,7 +64,7 @@ class MissionPlayerPage extends StatelessWidget {
         state.yasminaMessage != null) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(Spacing.xxl),
           child: YasminaCard(
             message: state.yasminaMessage!,
             onDismiss: () {
@@ -73,7 +75,7 @@ class MissionPlayerPage extends StatelessWidget {
       );
     }
 
-    // Route to the correct exercise widget
+    // Route to the correct exercise widget based on type
     final exercise = state.currentExercise;
     final scaffolding = state.currentScaffolding;
 
@@ -86,21 +88,9 @@ class MissionPlayerPage extends StatelessWidget {
       ExerciseType.shadow ||
       ExerciseType.repeat ||
       ExerciseType.vocabularyPresent ||
-      ExerciseType.reconstruct => SpeakingExerciseWidget(
-          exercise: exercise,
-          scaffolding: scaffolding,
-          state: state,
-        ),
-      ExerciseType.conversation => SpeakingExerciseWidget(
-          exercise: exercise,
-          scaffolding: scaffolding,
-          state: state,
-        ),
-      ExerciseType.timePressure => SpeakingExerciseWidget(
-          exercise: exercise,
-          scaffolding: scaffolding,
-          state: state,
-        ),
+      ExerciseType.reconstruct ||
+      ExerciseType.conversation ||
+      ExerciseType.timePressure ||
       ExerciseType.parallelTracks ||
       ExerciseType.rescue ||
       ExerciseType.dictation => SpeakingExerciseWidget(
@@ -135,13 +125,7 @@ class MissionPlayerPage extends StatelessWidget {
               context.read<MissionBloc>().add(const RetryExerciseEvent());
             }
           : null,
-      onListenModel: exercise.targetAudioNative != null
-          ? () {
-              context.read<MissionBloc>().add(
-                    PlayAudioEvent(audioPath: exercise.targetAudioNative),
-                  );
-            }
-          : null,
+      onListenModel: null, // Audio assets not yet available
     );
   }
 }

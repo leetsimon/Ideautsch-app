@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/spacing.dart';
@@ -75,9 +76,7 @@ class MissionSummaryPage extends StatelessWidget {
                   icon: Icons.arrow_forward_rounded,
                   isExpanded: true,
                   onPressed: () {
-                    Navigator.of(context).popUntil(
-                      (route) => route.isFirst,
-                    );
+                    context.go('/home');
                   },
                 ),
                 const SizedBox(height: Spacing.xxl),
